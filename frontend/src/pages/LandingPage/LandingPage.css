@@ -1,0 +1,31 @@
+.landing-page {
+  width: 100%;
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Section spacing */
+.landing-page section {
+  position: relative;
+}
+
+.landing-page section:not(:last-child) {
+  margin-bottom: 0;
+}
+
+/* Intersection animations */
+.landing-page section {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s ease;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .landing-page {
+    overflow-x: hidden;
+  }
+}

@@ -1,0 +1,69 @@
+/* Profile Header Styles - Simplified */
+.profile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  height: 80px;
+  z-index: 1000;
+}
+
+.profile-header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo */
+.profile-logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #6366f1;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.profile-logo:hover {
+  opacity: 0.8;
+}
+
+/* Theme Toggle */
+.profile-theme-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.profile-theme-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Dark theme */
+[data-theme="dark"] .profile-header {
+  background: #1f2937;
+  border-bottom-color: #374151;
+}
+
+[data-theme="dark"] .profile-logo span {
+  color: #818cf8;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .profile-header-container {
+    padding: 0 1rem;
+  }
+}

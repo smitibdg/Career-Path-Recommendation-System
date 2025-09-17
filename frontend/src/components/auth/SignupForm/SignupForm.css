@@ -1,0 +1,156 @@
+.login-form, .signup-form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-group input:disabled {
+  background: #f9fafb;
+  cursor: not-allowed;
+}
+
+.submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1.5rem;
+}
+
+.submit-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form-footer {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.form-footer p {
+  color: #6b7280;
+  margin: 0;
+}
+
+.switch-link {
+  background: none;
+  border: none;
+  color: #6366f1;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.switch-link:hover {
+  color: #4f46e5;
+}
+
+.error-alert {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+/* Dark theme support */
+[data-theme="dark"] .form-group label {
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .form-group input {
+  background: #4b5563;
+  border-color: #6b7280;
+  color: white;
+}
+
+[data-theme="dark"] .form-group input:focus {
+  border-color: #818cf8;
+}
+
+[data-theme="dark"] .form-footer {
+  border-top-color: #4b5563;
+}
+
+[data-theme="dark"] .form-footer p {
+  color: #d1d5db;
+}
+
+/* Password validation styles */
+.password-mismatch {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
+
+.password-hint {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.password-hint.error {
+  color: #dc2626;
+}
+
+.password-hint.success {
+  color: #16a34a;
+}
+
+/* Disabled button when passwords don't match */
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Dark theme password hints */
+[data-theme="dark"] .password-hint.error {
+  color: #f87171;
+}
+
+[data-theme="dark"] .password-hint.success {
+  color: #4ade80;
+}
