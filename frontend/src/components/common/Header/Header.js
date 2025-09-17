@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
-import { useTheme } from '../../../context/ThemeContext';
 import Modal from '../Modal/Modal';
 import LoginForm from '../../auth/LoginForm/LoginForm';
 import SignupForm from '../../auth/SignupForm/SignupForm';
@@ -9,7 +8,6 @@ import './Header.css';
 
 const Header = () => {
   const { isAuthenticated } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   
   // Modal states
@@ -101,8 +99,9 @@ const Header = () => {
 
           {/* Actions */}
           <div className="header-actions">
-            <button className="theme-btn" onClick={toggleTheme}>
-              {theme === 'light' ? '🌙' : '☀️'}
+            {/* Theme button - Non-functional during Phase 2 */}
+            <button className="theme-btn" disabled title="Theme switching coming soon">
+              🌙
             </button>
             {!isAuthenticated && (
               <>

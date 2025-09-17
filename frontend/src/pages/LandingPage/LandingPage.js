@@ -3,8 +3,8 @@ import Header from '../../components/common/Header/Header'; // ✅ ADD HEADER
 import Footer from '../../components/common/Footer/Footer'; // ✅ ADD FOOTER
 import HeroSection from '../../components/landing/HeroSection/HeroSection';
 import FeaturesSection from '../../components/landing/FeaturesSection/FeaturesSection';
-import HowItWorks from '../../components/landing/HowItWorks/HowItWorks';
-import Testimonials from '../../components/landing/Testimonials/Testimonials';
+import HowItWorks from '../../components/landing/HowItWorksSection/HowItWorks';
+import Testimonials from '../../components/landing/TestimonialsSection/Testimonials';
 import Modal from '../../components/common/Modal/Modal';
 import LoginForm from '../../components/auth/LoginForm/LoginForm';
 import SignupForm from '../../components/auth/SignupForm/SignupForm';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Sidebar from '../../common/Sidebar/Sidebar';
+import Sidebar from '../Sidebar/Sidebar';
 import TestCards from '../TestCards/TestCards';
-import User from '../User/User';
+import UserProfile from '../UserProfile/UserProfile';
 import './MainDashboard.css';
 
 const MainDashboard = ({ user }) => {
@@ -16,7 +16,7 @@ const MainDashboard = ({ user }) => {
       case 'career-matches':
         return <div className="section-content">Career Matches - Coming Soon</div>;
       case 'profile':
-        return <User user={user} />;
+        return <UserProfile user={user} />;
       default:
         return <TestCards />;
     }

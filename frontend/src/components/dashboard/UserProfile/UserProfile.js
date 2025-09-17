@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useUser } from '../../../context/UserContext';
-import './User.css';
+import './UserProfile.css';
 
 const User = () => {
   const { userProfile, updateUserProfile } = useUser();

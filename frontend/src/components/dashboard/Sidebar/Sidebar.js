@@ -1,11 +1,9 @@
 import React from 'react';
 import { useAuth } from '../../../context/AuthContext';
-import { useTheme } from '../../../context/ThemeContext';
 import './Sidebar.css';
 
 const Sidebar = ({ activeSection, setActiveSection, user }) => {
   const { logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
 
   const sidebarItems = [
     {
@@ -67,9 +65,11 @@ const Sidebar = ({ activeSection, setActiveSection, user }) => {
 
       {/* Bottom Actions */}
       <div className="sidebar-footer">
-        <button className="sidebar-action" onClick={toggleTheme} title="Toggle Theme">
-          <span className="sidebar-icon">{theme === 'light' ? '🌙' : '☀️'}</span>
-          <span className="sidebar-label">Theme</span>
+        <button className="theme-btn" disabled title="Theme switching coming soon">
+          🌙
+        </button>
+        <button className="sidebar-action" odisabled title="Theme switching coming soon">
+          <span className="sidebar-icon">🌙</span>
         </button>
         <button className="sidebar-action" onClick={logout} title="Logout">
           <span className="sidebar-icon">🚪</span>
