@@ -41,7 +41,7 @@ const HeroSection = ({ onLoginClick, onSignupClick }) => {
             
             {/* ✅ UPDATED: Buttons now trigger modals instead of navigation */}
             <div className="hero-actions">
-              <button onClick={onSignupClick} className="btn btn-primary btn-large">
+              <button onClick={onSignupClick} className="btn btn-secondary btn-large">
                 Start Free Assessment
               </button>
               <button onClick={onLoginClick} className="btn btn-secondary btn-large">

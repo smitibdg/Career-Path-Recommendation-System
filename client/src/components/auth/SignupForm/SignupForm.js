@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import './SignupForm.css';
 
-const SignupForm = ({ onClose, onSwitchLogin }) => {
+const SignupForm = ({ onClose, onSwitchToLogin }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -147,14 +147,14 @@ const SignupForm = ({ onClose, onSwitchLogin }) => {
 
         <div className="footer-text">
           <span>Already have an account? </span>
-          <button 
-            type="button" 
-            className="signin-btn" 
-            onClick={onSwitchLogin}
-            disabled={isSubmitting}
-          >
-            Sign In
-          </button>
+            <button 
+              type="button" 
+              className="signin-btn" 
+              onClick={onSwitchToLogin}
+              disabled={isSubmitting}
+            >
+              Sign In
+            </button>
         </div>
       </form>
     </div>

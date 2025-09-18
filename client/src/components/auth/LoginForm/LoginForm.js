@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import './LoginForm.css';
 
-const LoginForm = ({ onClose, onSwitchSignup }) => {
+const LoginForm = ({ onClose, onSwitchToSignup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -112,7 +112,7 @@ const LoginForm = ({ onClose, onSwitchSignup }) => {
             <button
               type="button"
               className="switch-form-link"
-              onClick={onSwitchSignup}
+              onClick={onSwitchToSignup}
               disabled={isSubmitting}
             >
               Create Account
