@@ -79,6 +79,7 @@
   line-height: 1.6;
   margin-bottom: 2rem;
   opacity: 0.9;
+  color: #dfd9d9 !important;
 }
 
 .hero-stats {
@@ -95,7 +96,7 @@
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #ffffff !important;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -103,6 +104,7 @@
   display: block;
   font-size: 0.9rem;
   opacity: 0.8;
+  color: #dfd9d9 !important;
 }
 
 .hero-actions {
@@ -241,17 +243,17 @@
 }
 
 .hero-actions .btn {
-  background: linear-gradient(135deg, #d37efa 0%, #a626f1 100%);
+  background: linear-gradient(135deg, #a5aefe 0%, #7293fd 100%);
   color: white;
   border: none;
   border-radius: 25px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4px 15px rgba(77, 75, 75, 0.3);
 }
 
 .hero-actions .btn:hover {
-  background: linear-gradient(135deg, #a626f1 0%, #d37efa 100%);
+  background: linear-gradient(135deg, #7293fd 0%, #a5aefe 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 6px 20px rgba(77, 75, 75, 0.3);
 }
