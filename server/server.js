@@ -33,33 +33,25 @@ mongoose.connect(MONGODB_URI, {
   console.error('❌ MongoDB connection error:', error);
 });
 
-// ✅ User Schema
+// ✅ UPDATED: Simplified User Schema - Flat Structure (13 columns only)
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  profile: {
-    age: Number,
-    education: String,
-    interests: [String],
-    skills: [String],
-    experience: String,
-    location: String
-  },
-  assessmentResults: [{
-    testType: String,
-    score: Number,
-    results: Object,
-    completedAt: { type: Date, default: Date.now }
-  }],
-  careerRecommendations: [{
-    field: String,
-    confidence: Number,
-    reasons: [String],
-    generatedAt: { type: Date, default: Date.now }
-  }]
-}, {
-  timestamps: true
+  
+  // ✅ FLAT PROFILE FIELDS (no nested profile object)
+  age: { type: Number },
+  gender: { type: String },
+  educationLevel: { type: String },
+  personalityType: { type: String },
+  phoneNumber: { type: String },
+  city: { type: String },
+  state: { type: String },
+  interests: { type: String },
+  careerGoals: { type: String },
+  
+  // ✅ SINGLE TIMESTAMP
+  timestamp: { type: Date, default: Date.now }
 });
 
 const User = mongoose.model('User', userSchema);
@@ -73,14 +65,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// ✅ Register Route
+// ✅ Register Route (unchanged)
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
-
     console.log('Registration attempt:', { name, email });
 
-    // Validation
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -95,7 +85,6 @@ app.post('/api/auth/register', async (req, res) => {
       });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -104,11 +93,9 @@ app.post('/api/auth/register', async (req, res) => {
       });
     }
 
-    // Hash password
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // Create user
     const user = new User({
       name,
       email,
@@ -117,7 +104,6 @@ app.post('/api/auth/register', async (req, res) => {
 
     await user.save();
 
-    // Generate JWT token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET || 'your-secret-key',
@@ -146,14 +132,12 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// ✅ Login Route
+// ✅ Login Route (unchanged)
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-
     console.log('Login attempt:', { email });
 
-    // Validation
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -161,7 +145,6 @@ app.post('/api/auth/login', async (req, res) => {
       });
     }
 
-    // Find user
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({
@@ -170,7 +153,6 @@ app.post('/api/auth/login', async (req, res) => {
       });
     }
 
-    // Check password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res.status(400).json({
@@ -179,7 +161,6 @@ app.post('/api/auth/login', async (req, res) => {
       });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET || 'your-secret-key',
@@ -195,8 +176,7 @@ app.post('/api/auth/login', async (req, res) => {
       user: {
         id: user._id,
         name: user.name,
-        email: user.email,
-        profile: user.profile
+        email: user.email
       }
     });
 
@@ -209,10 +189,9 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// ✅ Profile Routes
+// ✅ UPDATED: Profile Creation/Update Route (Flat Structure)
 app.post('/api/profile', async (req, res) => {
   try {
-    // Extract token from Authorization header
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       return res.status(401).json({
@@ -221,7 +200,7 @@ app.post('/api/profile', async (req, res) => {
       });
     }
 
-    const token = authHeader.split(' ')[1]; // Remove 'Bearer ' prefix
+    const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
     
     const user = await User.findById(decoded.userId);
@@ -232,14 +211,45 @@ app.post('/api/profile', async (req, res) => {
       });
     }
 
-    // Update profile
-    user.profile = { ...user.profile, ...req.body };
+    // ✅ UPDATED: Direct assignment (flat structure)
+    if (req.body.name && req.body.name !== user.name) {
+      user.name = req.body.name;
+    }
+    
+    // Update profile fields directly on user object
+    user.age = req.body.age;
+    user.gender = req.body.gender;
+    user.educationLevel = req.body.educationLevel;
+    user.personalityType = req.body.personalityType;
+    user.phoneNumber = req.body.phoneNumber || '';
+    user.city = req.body.city || '';
+    user.state = req.body.state || '';
+    user.interests = req.body.interests;
+    user.careerGoals = req.body.careerGoals || '';
+    user.timestamp = new Date();
+    
     await user.save();
+
+    console.log('✅ Profile updated successfully:', user._id);
 
     res.json({
       success: true,
       message: 'Profile updated successfully',
-      profile: user.profile
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        age: user.age,
+        gender: user.gender,
+        educationLevel: user.educationLevel,
+        personalityType: user.personalityType,
+        phoneNumber: user.phoneNumber,
+        city: user.city,
+        state: user.state,
+        interests: user.interests,
+        careerGoals: user.careerGoals,
+        timestamp: user.timestamp
+      }
     });
 
   } catch (error) {
@@ -251,7 +261,7 @@ app.post('/api/profile', async (req, res) => {
   }
 });
 
-// ✅ Get Profile Route
+// ✅ UPDATED: Get Profile Route (Flat Structure)
 app.get('/api/profile', async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -275,11 +285,20 @@ app.get('/api/profile', async (req, res) => {
 
     res.json({
       success: true,
-      profile: user.profile,
       user: {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        age: user.age,
+        gender: user.gender,
+        educationLevel: user.educationLevel,
+        personalityType: user.personalityType,
+        phoneNumber: user.phoneNumber,
+        city: user.city,
+        state: user.state,
+        interests: user.interests,
+        careerGoals: user.careerGoals,
+        timestamp: user.timestamp
       }
     });
 
@@ -292,10 +311,79 @@ app.get('/api/profile', async (req, res) => {
   }
 });
 
-// ✅ FIXED: Catch-all route - REMOVED THE PROBLEMATIC /* ROUTE
-// Instead of app.get('/*', ...), we use this approach:
+// ✅ UPDATED: Profile Update Route for Dashboard (Flat Structure)
+app.put('/api/profile', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({
+        success: false,
+        message: 'No token provided'
+      });
+    }
+
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // ✅ UPDATED: Direct field updates
+    if (req.body.name && req.body.name !== user.name) {
+      user.name = req.body.name;
+    }
+    
+    user.age = req.body.age;
+    user.gender = req.body.gender;
+    user.educationLevel = req.body.educationLevel;
+    user.personalityType = req.body.personalityType;
+    user.phoneNumber = req.body.phoneNumber || '';
+    user.city = req.body.city || '';
+    user.state = req.body.state || '';
+    user.interests = req.body.interests;
+    user.careerGoals = req.body.careerGoals || '';
+    user.timestamp = new Date();
+    
+    await user.save();
+
+    console.log('✅ Profile updated from dashboard:', user._id);
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        age: user.age,
+        gender: user.gender,
+        educationLevel: user.educationLevel,
+        personalityType: user.personalityType,
+        phoneNumber: user.phoneNumber,
+        city: user.city,
+        state: user.state,
+        interests: user.interests,
+        careerGoals: user.careerGoals,
+        timestamp: user.timestamp
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Profile update error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error updating profile'
+    });
+  }
+});
+
+// ✅ Catch-all route
 app.use((req, res, next) => {
-  // Only handle unmatched API routes
   if (req.path.startsWith('/api/')) {
     res.status(404).json({
       success: false,

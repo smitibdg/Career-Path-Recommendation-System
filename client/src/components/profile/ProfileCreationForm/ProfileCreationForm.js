@@ -114,13 +114,11 @@ const ProfileForm = () => {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
+                  placeholder="Select Gender"
                   required
                 >
-                  <option value="">Select Gender</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
-                  <option value="other">Other</option>
-                  <option value="prefer-not-to-say">Prefer not to say</option>
                 </select>
               </div>
             </div>
@@ -133,9 +131,9 @@ const ProfileForm = () => {
                   name="educationLevel"
                   value={formData.educationLevel}
                   onChange={handleChange}
+                  placeholder="Select Education Level"
                   required
                 >
-                  <option value="">Select Education Level</option>
                   <option value="high-school">High School (10th)</option>
                   <option value="intermediate-11th">11th</option>
                   <option value="intermediate-12th">12th</option>
@@ -151,9 +149,9 @@ const ProfileForm = () => {
                   name="personalityType"
                   value={formData.personalityType}
                   onChange={handleChange}
+                  placeholder="Select Personality Type"
                   required
                 >
-                  <option value="">Select Personality Type</option>
                   <option value="extrovert">Extrovert</option>
                   <option value="introvert">Introvert</option>
                   <option value="ambivert">Ambivert</option>

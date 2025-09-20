@@ -12,25 +12,32 @@ export const useUser = () => {
 };
 
 export const UserProvider = ({ children }) => {
-  const { user } = useAuth();
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { user, isAuthenticated } = useAuth();
 
-  // ✅ ADD: API Base URL
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
+  const API_BASE_URL = 'http://localhost:5000/api';
 
-  // Load profile from backend when user logs in
   useEffect(() => {
-    if (user) {
+    if (isAuthenticated && user) {
       loadUserProfileFromBackend();
+    } else {
+      setUserProfile(null);
+      setError(null);
     }
-  }, [user]);
+  }, [isAuthenticated, user]);
 
-  // ✅ ADD: Load profile from backend
   const loadUserProfileFromBackend = async () => {
     try {
+      setLoading(true);
+      setError(null);
+      
       const token = localStorage.getItem('authToken');
-      if (!token) return;
+      if (!token) {
+        console.warn('No auth token found');
+        return;
+      }
 
       const response = await fetch(`${API_BASE_URL}/profile`, {
         method: 'GET',
@@ -42,124 +49,170 @@ export const UserProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        setUserProfile(data.profile);
+        if (data.success) {
+          setUserProfile(data.user);
+          localStorage.setItem(`userProfile_${data.user.id}`, JSON.stringify(data.user));
+        } else {
+          throw new Error(data.message || 'Failed to load profile');
+        }
+      } else if (response.status === 401) {
+        console.warn('Authentication token expired');
+        localStorage.removeItem('authToken');
+        setError('Session expired. Please login again.');
+      } else {
+        throw new Error(`HTTP ${response.status}: Failed to load profile`);
       }
     } catch (error) {
       console.error('Error loading profile from backend:', error);
-      // Fallback to localStorage
-      const savedProfile = localStorage.getItem(`userProfile_${user.id}`);
-      if (savedProfile) {
-        setUserProfile(JSON.parse(savedProfile));
-      }
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
+  const getUserProfile = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await fetch(`${API_BASE_URL}/profile`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setUserProfile(data.user);
+        return { success: true, user: data.user };
+      } else {
+        throw new Error(data.message || 'Failed to get profile');
+      }
+    } catch (error) {
+      console.error('Error getting profile:', error);
+      setError(error.message);
+      return { success: false, message: error.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ UPDATED: Save profile for ProfileCreationForm
   const saveUserProfile = async (profileData) => {
     try {
       setLoading(true);
+      setError(null);
 
-      // Save to localStorage immediately (for offline functionality)
-      const profileWithUser = {
-        ...profileData,
-        userId: user.id,
-        email: user.email,
-        name: profileData.name || user.name,
-        updatedAt: new Date().toISOString()
-      };
-      
-      localStorage.setItem(`userProfile_${user.id}`, JSON.stringify(profileWithUser));
-      setUserProfile(profileWithUser);
-
-      // ✅ REPLACE TODO: Save to backend API
-      const token = localStorage.getItem('authToken');
-      
-      if (token) {
-        const response = await fetch(`${API_BASE_URL}/profile`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(profileData)
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          // Update with backend response
-          setUserProfile(data.profile);
-          return { success: true, message: 'Profile saved successfully!' };
-        } else {
-          throw new Error(data.message || 'Failed to save profile to backend');
-        }
+      if (!user) {
+        throw new Error('User not authenticated');
       }
 
-      return { success: true };
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      console.log('🔄 Sending profile data:', profileData);
+
+      const response = await fetch(`${API_BASE_URL}/profile`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(profileData)
+      });
+
+      const data = await response.json();
+      console.log('📝 Backend response:', data);
+      
+      if (data.success) {
+        setUserProfile(data.user);
+        localStorage.setItem(`userProfile_${data.user.id}`, JSON.stringify(data.user));
+        console.log('✅ Profile saved successfully to backend');
+        return { success: true, user: data.user, message: data.message };
+      } else {
+        throw new Error(data.message || 'Failed to save profile to backend');
+      }
+
     } catch (error) {
       console.error('Error saving profile:', error);
-      return { 
-        success: false, 
-        message: error.message || 'Failed to save profile' 
-      };
+      setError(error.message);
+      return { success: false, message: error.message };
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ UPDATED: Update profile for Dashboard
   const updateUserProfile = async (updatedData) => {
     try {
       setLoading(true);
+      setError(null);
 
-      const updatedProfile = {
-        ...userProfile,
-        ...updatedData,
-        updatedAt: new Date().toISOString()
-      };
-
-      // Save to localStorage
-      localStorage.setItem(`userProfile_${user.id}`, JSON.stringify(updatedProfile));
-      setUserProfile(updatedProfile);
-
-      // ✅ REPLACE TODO: Update backend API
-      const token = localStorage.getItem('authToken');
-      
-      if (token) {
-        const response = await fetch(`${API_BASE_URL}/profile`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(updatedData)
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          setUserProfile(data.profile);
-          return { success: true, message: 'Profile updated successfully!' };
-        } else {
-          throw new Error(data.message || 'Failed to update profile');
-        }
+      if (!user) {
+        throw new Error('User not authenticated');
       }
 
-      return { success: true };
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await fetch(`${API_BASE_URL}/profile`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedData)
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setUserProfile(data.user);
+        localStorage.setItem(`userProfile_${data.user.id}`, JSON.stringify(data.user));
+        console.log('✅ Profile updated successfully in backend');
+        return { success: true, user: data.user, message: data.message };
+      } else {
+        throw new Error(data.message || 'Failed to update profile');
+      }
+
     } catch (error) {
       console.error('Error updating profile:', error);
-      return { 
-        success: false, 
-        message: error.message || 'Failed to update profile' 
-      };
+      setError(error.message);
+      return { success: false, message: error.message };
     } finally {
       setLoading(false);
     }
+  };
+
+  const clearError = () => {
+    setError(null);
+  };
+
+  const refreshProfile = async () => {
+    return await loadUserProfileFromBackend();
   };
 
   const value = {
     userProfile,
     loading,
+    error,
     saveUserProfile,
     updateUserProfile,
+    getUserProfile,
+    refreshProfile,
+    clearError,
   };
 
   return (
@@ -168,3 +221,5 @@ export const UserProvider = ({ children }) => {
     </UserContext.Provider>
   );
 };
+
+export default UserContext;
