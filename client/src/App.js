@@ -8,6 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 import { UserProvider } from './context/UserContext';
 
 // Page Components
+import ScrollToTop from './components/common/ScrollToTop/ScrollToTop';
 import LandingPage from './pages/LandingPage/LandingPage';
 import DashboardPage from './pages/DashboardPage/DashboardPage';
 import ProfileCreation from './components/profile/ProfileCreationForm/ProfileCreationForm';
@@ -22,6 +23,7 @@ import './App.css';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <AuthProvider>
         <UserProvider>
           <div className="App">

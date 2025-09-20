@@ -63,7 +63,10 @@ const SignupForm = ({ onClose, onSwitchToLogin }) => {
   return (
     <div className="signup-form-container">
       {/* ✅ ONLY CLOSE BUTTON - REMOVED DUPLICATE HEADER */}
-
+      {/*<button className="close-btn" onClick={onClose} aria-label="Close">&times;</button>
+      
+      <h2>Get Started</h2>
+      <p>Create your account to begin your career journey</p>*/}
       {error && <div className="error-message">{error}</div>}
 
       <form className="signup-form" onSubmit={handleSubmit}>

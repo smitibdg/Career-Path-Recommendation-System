@@ -5,7 +5,7 @@ import HeroSection from '../../components/landing/HeroSection/HeroSection';
 import FeaturesSection from '../../components/landing/FeaturesSection/FeaturesSection';
 import HowItWorksSection from '../../components/landing/HowItWorksSection/HowItWorks';
 import TestimonialsSection from '../../components/landing/TestimonialsSection/Testimonials';
-// ✅ REMOVED: import Modal from '../../components/common/Modal/Modal';
+import Modal from '../../components/common/Modal/Modal';
 import LoginForm from '../../components/auth/LoginForm/LoginForm';
 import SignupForm from '../../components/auth/SignupForm/SignupForm';
 import './LandingPage.css';
@@ -86,6 +86,9 @@ const LandingPage = () => {
       {showLoginModal && (
         <div className="modal-overlay" onClick={closeLoginModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={closeLoginModal} aria-label="Close">&times;</button>
+            <h2>Welcome Back</h2>
+            <p>Sign in to continue your career discovery journey</p>
             <LoginForm 
               onClose={closeLoginModal}
               onSwitchToSignup={switchToSignup}
@@ -97,6 +100,9 @@ const LandingPage = () => {
       {showSignupModal && (
         <div className="modal-overlay" onClick={closeSignupModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={closeSignupModal} aria-label="Close">&times;</button>
+            <h2>Get Started</h2>
+            <p>Create your account to begin your career journey</p>
             <SignupForm 
               onClose={closeSignupModal}
               onSwitchToLogin={switchToLogin}

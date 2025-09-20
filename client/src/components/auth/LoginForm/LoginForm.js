@@ -45,7 +45,10 @@ const LoginForm = ({ onClose, onSwitchToSignup }) => {
   return (
     <div className="login-form-container">
       {/* ✅ ONLY CLOSE BUTTON - REMOVED DUPLICATE HEADER */}
-
+      {/*<button className="close-btn" onClick={onClose} aria-label="Close">&times;</button>
+      
+      <h2>Welcome Back</h2>
+      <p>Sign in to continue your career discovery journey</p>*/}
 
       {error && <div className="error-message">{error}</div>}
 

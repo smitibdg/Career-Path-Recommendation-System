@@ -104,8 +104,7 @@ const ProfileForm = () => {
                   value={formData.age}
                   onChange={handleChange}
                   placeholder="Your age"
-                  min="15"
-                  max="35"
+                  min="1"
                   required
                 />
               </div>
