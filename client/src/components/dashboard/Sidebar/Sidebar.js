@@ -65,9 +65,6 @@ const Sidebar = ({ activeSection, setActiveSection, user }) => {
 
       {/* Bottom Actions */}
       <div className="sidebar-footer">
-        <button className="theme-btn" disabled title="Theme switching coming soon">
-          🌙
-        </button>
         <button className="sidebar-action" odisabled title="Theme switching coming soon">
           <span className="sidebar-icon">🌙</span>
         </button>

@@ -82,11 +82,6 @@ const FeaturesSection = ({ onLoginClick, onSignupClick }) => {
                 <h3>{feature.title}</h3>
                 <p>{feature.description}</p>
               </div>
-              
-              {/* Hover Overlay */}
-              <div className="feature-overlay">
-                <span className="learn-more">Learn More →</span>
-              </div>
             </div>
           ))}
         </div>

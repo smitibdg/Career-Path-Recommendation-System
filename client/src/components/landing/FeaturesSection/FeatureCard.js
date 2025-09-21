@@ -1,4 +1,4 @@
-import React from 'react';
+{/*import React from 'react';
 
 const FeatureCard = ({ feature, index }) => {
   return (
@@ -19,4 +19,4 @@ const FeatureCard = ({ feature, index }) => {
   );
 };
 
-export default FeatureCard;
+export default FeatureCard; */}
