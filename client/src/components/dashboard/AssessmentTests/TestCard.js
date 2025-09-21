@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './TestCards.css';
+import './TestCard.css';
 
 const TestCards = () => {
   const [completedTests, setCompletedTests] = useState(0);

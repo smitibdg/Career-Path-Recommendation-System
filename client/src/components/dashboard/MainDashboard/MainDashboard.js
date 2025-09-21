@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from '../Sidebar/Sidebar';
-import TestCards from '../TestCards/TestCards';
-import UserProfile from '../UserProfile/UserProfile';
+import TestCards from '../AssessmentTests/TestCard';
+import UserProfile from '../Sidebar/UserProfile/UserProfile';
 import './MainDashboard.css';
 
 const MainDashboard = ({ user }) => {
