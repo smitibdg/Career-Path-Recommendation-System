@@ -11,7 +11,7 @@ import { UserProvider } from './context/UserContext';
 import ScrollToTop from './components/common/ScrollToTop/ScrollToTop';
 import LandingPage from './pages/LandingPage/LandingPage';
 import DashboardPage from './pages/DashboardPage/DashboardPage';
-import ProfileCreation from './components/profile/ProfileCreationForm/ProfileCreationForm';
+import ProfileCreation from './components/auth/ProfileCreationForm/ProfileCreationForm';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 // Protected Route Component

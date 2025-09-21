@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Header from '../../components/common/Header/Header';
-import Footer from '../../components/common/Footer/Footer';
+import Header from '../../components/landing/Header/Header';
+import Footer from '../../components/landing/Footer/Footer';
 import HeroSection from '../../components/landing/HeroSection/HeroSection';
 import FeaturesSection from '../../components/landing/FeaturesSection/FeaturesSection';
 import HowItWorksSection from '../../components/landing/HowItWorksSection/HowItWorks';
