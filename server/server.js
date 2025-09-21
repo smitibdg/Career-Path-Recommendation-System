@@ -33,7 +33,7 @@ mongoose.connect(MONGODB_URI, {
   console.error('❌ MongoDB connection error:', error);
 });
 
-// ✅ UPDATED: Simplified User Schema - Flat Structure (13 columns only)
+// ✅ UPDATED: Simplified User Schema - Flat Structure (12 columns only)
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -48,7 +48,6 @@ const userSchema = new mongoose.Schema({
   city: { type: String },
   state: { type: String },
   interests: { type: String },
-  careerGoals: { type: String },
   
   // ✅ SINGLE TIMESTAMP
   timestamp: { type: Date, default: Date.now }
@@ -225,7 +224,6 @@ app.post('/api/profile', async (req, res) => {
     user.city = req.body.city || '';
     user.state = req.body.state || '';
     user.interests = req.body.interests;
-    user.careerGoals = req.body.careerGoals || '';
     user.timestamp = new Date();
     
     await user.save();
@@ -247,7 +245,6 @@ app.post('/api/profile', async (req, res) => {
         city: user.city,
         state: user.state,
         interests: user.interests,
-        careerGoals: user.careerGoals,
         timestamp: user.timestamp
       }
     });
@@ -297,7 +294,6 @@ app.get('/api/profile', async (req, res) => {
         city: user.city,
         state: user.state,
         interests: user.interests,
-        careerGoals: user.careerGoals,
         timestamp: user.timestamp
       }
     });
@@ -346,7 +342,6 @@ app.put('/api/profile', async (req, res) => {
     user.city = req.body.city || '';
     user.state = req.body.state || '';
     user.interests = req.body.interests;
-    user.careerGoals = req.body.careerGoals || '';
     user.timestamp = new Date();
     
     await user.save();
@@ -368,7 +363,6 @@ app.put('/api/profile', async (req, res) => {
         city: user.city,
         state: user.state,
         interests: user.interests,
-        careerGoals: user.careerGoals,
         timestamp: user.timestamp
       }
     });

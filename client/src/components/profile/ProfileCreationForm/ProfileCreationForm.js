@@ -22,7 +22,6 @@ const ProfileForm = () => {
     city: '',
     state: '',
     interests: '',
-    careerGoals: ''
   });
 
   const handleChange = (e) => {
@@ -205,18 +204,6 @@ const ProfileForm = () => {
                 rows="3"
                 placeholder="Tell us about your interests, hobbies, and what you enjoy doing..."
                 required
-              />
-            </div>
-
-            {/* Career Goals */}
-            <div className="form-group">
-              <label>Career Goals</label>
-              <textarea
-                name="careerGoals"
-                value={formData.careerGoals}
-                onChange={handleChange}
-                rows="3"
-                placeholder="What are your career aspirations and goals?"
               />
             </div>
 

@@ -21,7 +21,6 @@ const ProfileSettings = () => {
     city: '',
     state: '',
     interests: '',
-    careerGoals: ''
   });
 
   // ✅ Load user profile when component mounts
@@ -43,7 +42,6 @@ const ProfileSettings = () => {
           city: profile.city || '',
           state: profile.state || '',
           interests: profile.interests || '',
-          careerGoals: profile.careerGoals || ''
         });
       }
     };
@@ -143,7 +141,7 @@ const ProfileSettings = () => {
                   min="1"
                 />
               ) : (
-                <div className="display-value">{userProfile.profile?.age || 'Not specified'}</div>
+                <div className="display-value">{userProfile.age || 'Not specified'}</div>
               )}
             </div>
             
@@ -160,7 +158,7 @@ const ProfileSettings = () => {
                   <option value="female">Female</option>
                 </select>
               ) : (
-                <div className="display-value">{userProfile.profile?.gender || 'Not specified'}</div>
+                <div className="display-value">{userProfile.gender || 'Not specified'}</div>
               )}
             </div>
           </div>
@@ -177,7 +175,7 @@ const ProfileSettings = () => {
                   placeholder="Enter your Phone Number"
                 />
               ) : (
-                <div className="display-value">{userProfile.profile?.phoneNumber || 'Not specified'}</div>
+                <div className="display-value">{userProfile.phoneNumber || 'Not specified'}</div>
               )}
             </div>
             
@@ -192,7 +190,7 @@ const ProfileSettings = () => {
                   placeholder="Enter your City"
                 />
               ) : (
-                <div className="display-value">{userProfile.profile?.city || 'Not specified'}</div>
+                <div className="display-value">{userProfile.city || 'Not specified'}</div>
               )}
             </div>
           </div>
@@ -221,7 +219,7 @@ const ProfileSettings = () => {
                   <option value="phd">PhD</option>
                 </select>
               ) : (
-                <div className="display-value">{userProfile.profile?.educationLevel || 'Not specified'}</div>
+                <div className="display-value">{userProfile.educationLevel || 'Not specified'}</div>
               )}
             </div>
             
@@ -239,7 +237,7 @@ const ProfileSettings = () => {
                   <option value="ambivert">Ambivert</option>
                 </select>
               ) : (
-                <div className="display-value">{userProfile.profile?.personalityType || 'Not specified'}</div>
+                <div className="display-value">{userProfile.personalityType || 'Not specified'}</div>
               )}
             </div>
           </div>
@@ -260,22 +258,7 @@ const ProfileSettings = () => {
                 placeholder="Tell us about your interests and hobbies..."
               />
             ) : (
-              <div className="display-value">{userProfile.profile?.interests || 'Not specified'}</div>
-            )}
-          </div>
-          
-          <div className="form-group">
-            <label>Career Goals</label>
-            {isEditing ? (
-              <textarea
-                name="careerGoals"
-                value={formData.careerGoals}
-                onChange={handleChange}
-                rows="3"
-                placeholder="What are your career aspirations?"
-              />
-            ) : (
-              <div className="display-value">{userProfile.profile?.careerGoals || 'Not specified'}</div>
+              <div className="display-value">{userProfile.interests || 'Not specified'}</div>
             )}
           </div>
         </div>
