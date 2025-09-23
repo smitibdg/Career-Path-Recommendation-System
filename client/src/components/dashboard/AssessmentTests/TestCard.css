@@ -747,3 +747,54 @@ div.test-modal span.status-indicator.pending {
     gap: 8px;
   }
 }
+
+.level-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.level-badge {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+}
+
+.level-detail {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.education-warning {
+  background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.warning-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.warning-icon {
+  font-size: 1.5rem;
+}
+
+.test-card.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

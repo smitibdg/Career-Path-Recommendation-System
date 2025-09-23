@@ -71,7 +71,7 @@ const Footer = () => {
                 <span className="stat-label">Assessment Types</span>
               </div>
               <div className="stat-item">
-                <span className="stat-value">100+</span>
+                <span className="stat-value">200+</span>
                 <span className="stat-label">Questions</span>
               </div>
               <div className="stat-item">

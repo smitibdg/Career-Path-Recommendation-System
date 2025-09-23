@@ -1,10 +1,12 @@
-// UPDATE YOUR EXISTING routes/profile.js
 const express = require('express');
 const router = express.Router();
 const {
   createOrUpdateProfile,
   getProfile,
-  deleteProfile
+  updateProfile,
+  deleteProfile,
+  completeAssessment,
+  getAssessmentProgress
 } = require('../controllers/profileController');
 const { authenticate } = require('../middleware/authMiddleware');
 
@@ -12,9 +14,13 @@ const { authenticate } = require('../middleware/authMiddleware');
 router.use(authenticate);
 
 // Profile routes
-router.post('/', createOrUpdateProfile);
-router.get('/', getProfile);
-router.put('/', createOrUpdateProfile); // Same as POST for create/update
-router.delete('/', deleteProfile);
+router.post('/', createOrUpdateProfile);           // Create profile
+router.get('/', getProfile);                      // Get profile
+router.put('/', updateProfile);                   // Update profile  
+router.delete('/', deleteProfile);                // Delete profile
+
+// Assessment routes
+router.post('/assessment/complete', completeAssessment);     // Complete assessment
+router.get('/assessment/progress', getAssessmentProgress);   // Get assessment progress
 
 module.exports = router;

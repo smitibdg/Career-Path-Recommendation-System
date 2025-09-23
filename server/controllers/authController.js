@@ -1,22 +1,14 @@
-// UPDATE YOUR EXISTING controllers/authController.js
 const User = require('../models/User');
 const Profile = require('../models/Profile');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 
-// Generate JWT Token
-const generateToken = (userId) => {
-  return jwt.sign(
-    { userId },
-    process.env.JWT_SECRET || 'career-path-jwt-secret-2025',
-    { expiresIn: '7d' }
-  );
-};
-
-// Register new user
+// Register user
 exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+
+    console.log('📝 Registration attempt:', { name, email });
 
     // Validation
     if (!name || !email || !password) {
@@ -27,7 +19,7 @@ exports.register = async (req, res) => {
     }
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -35,19 +27,29 @@ exports.register = async (req, res) => {
       });
     }
 
-    // Create new user
+    // Hash password
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Create user
     const user = new User({
-      name,
-      email,
-      password // Will be hashed by pre-save middleware
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: hashedPassword,
+      profileCompleted: false
     });
 
     await user.save();
 
-    // Generate token
-    const token = generateToken(user._id);
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
 
-    // Return user data (without password)
+    console.log('✅ User registered successfully:', user._id);
+
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
@@ -61,10 +63,11 @@ exports.register = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('❌ Registration error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error during registration'
+      message: 'Server error during registration',
+      error: error.message
     });
   }
 };
@@ -74,6 +77,8 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log('🔐 Login attempt:', { email });
+
     // Validation
     if (!email || !password) {
       return res.status(400).json({
@@ -82,30 +87,35 @@ exports.login = async (req, res) => {
       });
     }
 
-    // Check if user exists
-    const user = await User.findOne({ email });
+    // Find user
+    const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      return res.status(400).json({
+      return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: 'Invalid credentials'
       });
     }
 
     // Check password
-    const isPasswordValid = await user.comparePassword(password);
-    if (!isPasswordValid) {
-      return res.status(400).json({
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({
         success: false,
-        message: 'Invalid email or password'
+        message: 'Invalid credentials'
       });
     }
 
-    // Check if user has completed profile
+    // Get profile if exists
     const profile = await Profile.findOne({ user: user._id });
-    const profileCompleted = profile ? profile.profileCompleted : false;
 
-    // Generate token
-    const token = generateToken(user._id);
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' }
+    );
+
+    console.log('✅ User logged in successfully:', user._id);
 
     res.status(200).json({
       success: true,
@@ -115,23 +125,31 @@ exports.login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        profileCompleted
-      }
+        profileCompleted: user.profileCompleted
+      },
+      profile: profile ? {
+        educationLevel: profile.educationLevel,
+        assessmentLevel: profile.assessmentLevel,
+        assessmentProgress: profile.getAssessmentProgress()
+      } : null
     });
 
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('❌ Login error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error during login'
+      message: 'Server error during login',
+      error: error.message
     });
   }
 };
 
-// Get current user
+// Get current user info
 exports.getCurrentUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId).select('-password');
+    const userId = req.user.userId;
+
+    const user = await User.findById(userId).select('-password');
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -139,33 +157,30 @@ exports.getCurrentUser = async (req, res) => {
       });
     }
 
-    // Get user profile
-    const profile = await Profile.findOne({ user: user._id });
-    
+    // Get profile if exists
+    const profile = await Profile.findOne({ user: userId });
+
     res.status(200).json({
       success: true,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        profileCompleted: profile ? profile.profileCompleted : false,
-        profile: profile || null
-      }
+        profileCompleted: user.profileCompleted
+      },
+      profile: profile ? {
+        educationLevel: profile.educationLevel,
+        assessmentLevel: profile.assessmentLevel,
+        assessmentProgress: profile.getAssessmentProgress()
+      } : null
     });
 
   } catch (error) {
-    console.error('Get current user error:', error);
+    console.error('❌ Get current user error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error fetching user'
+      message: 'Server error',
+      error: error.message
     });
   }
-};
-
-// Logout user
-exports.logout = async (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'Logout successful'
-  });
 };

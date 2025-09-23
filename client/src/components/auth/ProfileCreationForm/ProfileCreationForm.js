@@ -6,7 +6,7 @@ import './ProfileCreationForm.css';
 
 const ProfileForm = () => {
   const { user } = useAuth();
-  const { saveUserProfile } = useUser();
+  const { setProfile, updateUserProfile } = useUser(); // Use setProfile instead of saveUserProfile
   const navigate = useNavigate();
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -37,13 +37,11 @@ const ProfileForm = () => {
 
     try {
       // ✅ Save profile data using UserContext
-      const result = await saveUserProfile(formData);
+      setProfile(formData); // This will trigger setEducationLevel automatically
+      updateUserProfile(formData); // Update profile with new data
       
-      if (result.success) {
-        setShowDialog(true);
-      } else {
-        alert('Error saving profile. Please try again.');
-      }
+      console.log('✅ Profile saved successfully:', formData);
+      setShowDialog(true);
     } catch (error) {
       console.error('Error:', error);
       alert('Error saving profile. Please try again.');
@@ -54,7 +52,7 @@ const ProfileForm = () => {
 
   const handleDialogClose = () => {
     setShowDialog(false);
-    navigate('/dashboard'); // Redirect to main dashboard
+    navigate('/dashboard');
     window.scrollTo(0, 0);
   };
 
@@ -113,16 +111,17 @@ const ProfileForm = () => {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  placeholder="Select Gender"
                   required
                 >
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
             </div>
 
-            {/* Education and Personality Row */}
+            {/* Education and Personality Row - FIXED OPTIONS */}
             <div className="form-row">
               <div className="form-group">
                 <label>Education Level *</label>
@@ -130,15 +129,15 @@ const ProfileForm = () => {
                   name="educationLevel"
                   value={formData.educationLevel}
                   onChange={handleChange}
-                  placeholder="Select Education Level"
                   required
                 >
-                  <option value="high-school">High School (10th)</option>
-                  <option value="intermediate-11th">11th</option>
-                  <option value="intermediate-12th">12th</option>
+                  <option value="">Select Education Level</option>
+                  <option value="intermediate-10th">10th Pass</option>
+                  <option value="intermediate-11th">11th Standard</option>
+                  <option value="intermediate-12th">12th Pass</option>
                   <option value="diploma">Diploma</option>
-                  <option value="bachelors">Undergraduate</option>
-                  <option value="masters">Master's</option>
+                  <option value="bachelors">Bachelor's Degree</option>
+                  <option value="masters">Master's Degree</option>
                   <option value="phd">PhD</option>
                 </select>
               </div>
@@ -148,12 +147,12 @@ const ProfileForm = () => {
                   name="personalityType"
                   value={formData.personalityType}
                   onChange={handleChange}
-                  placeholder="Select Personality Type"
                   required
                 >
-                  <option value="extrovert">Extrovert</option>
-                  <option value="introvert">Introvert</option>
-                  <option value="ambivert">Ambivert</option>
+                  <option value="">Select Personality Type</option>
+                  <option value="Extrovert">Extrovert</option>
+                  <option value="Introvert">Introvert</option>
+                  <option value="Ambivert">Ambivert</option>
                 </select>
               </div>
             </div>
@@ -208,19 +207,28 @@ const ProfileForm = () => {
             </div>
 
             <button type="submit" className="submit-btn" disabled={loading}>
-              {loading ? 'Saving...' : 'Submit Profile'}
+              {loading ? 'Saving...' : 'Create Profile'}
             </button>
           </form>
         </div>
       </div>
 
-      {/* Success Dialog */}
+      {/* Success Dialog - ENHANCED */}
       {showDialog && (
         <div className="dialog-overlay">
           <div className="dialog-content">
             <div className="dialog-icon">✅</div>
-            <h3>Profile Completed Successfully!</h3>
-            <p>Your profile has been saved. You can now access personalized career recommendations.</p>
+            <h3>Profile Created Successfully!</h3>
+            <p>Your profile has been saved. You can now take personalized assessments and get career recommendations.</p>
+            <div className="dialog-details">
+              <p><strong>Assessment Level:</strong> {
+                formData.educationLevel === 'intermediate-10th' || 
+                formData.educationLevel === 'intermediate-11th' || 
+                formData.educationLevel === 'intermediate-12th' ? 'Foundation' :
+                formData.educationLevel === 'diploma' || 
+                formData.educationLevel === 'bachelors' ? 'Intermediate' : 'Advanced'
+              }</p>
+            </div>
             <button onClick={handleDialogClose} className="dialog-btn">
               Continue to Dashboard
             </button>
