@@ -9,7 +9,7 @@ import './Header.css';
 const Header = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  
+    
   // Modal states
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -22,7 +22,6 @@ const Header = () => {
       });
       return;
     }
-
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -31,7 +30,7 @@ const Header = () => {
 
   const handleNavClick = (sectionId) => {
     const currentPath = window.location.pathname;
-    
+        
     if (currentPath === '/login' || currentPath === '/signup') {
       navigate('/');
       setTimeout(() => {
@@ -45,7 +44,7 @@ const Header = () => {
   // Modal handlers
   const openLoginModal = () => {
     setShowLoginModal(true);
-    setShowSignupModal(false); // Close signup if open
+    setShowSignupModal(false);
   };
 
   const closeLoginModal = () => {
@@ -54,7 +53,7 @@ const Header = () => {
 
   const openSignupModal = () => {
     setShowSignupModal(true);
-    setShowLoginModal(false); // Close login if open
+    setShowLoginModal(false);
   };
 
   const closeSignupModal = () => {
@@ -76,9 +75,20 @@ const Header = () => {
     <>
       <header className="header">
         <div className="header-container">
-          {/* Logo */}
+          {/* Logo with Custom Image */}
           <Link to="/" className="logo">
-            🎯 <span>CareerPath</span>
+            <img 
+              src="/assets/images/logo.png"
+              alt="CareerPath Logo"
+              className="logo-image"
+              onError={(e) => {
+                console.log('Logo image failed to load, showing fallback');
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'inline';
+              }}
+            />
+            <span className="logo-fallback" style={{ display: 'none' }}>🎯</span>
+            <span className="logo-text">CareerPath</span>
           </Link>
 
           {/* Navigation */}
@@ -99,20 +109,25 @@ const Header = () => {
 
           {/* Actions */}
           <div className="header-actions">
-            {/* Theme button - Non-functional during Phase 2 */}
+            {/* Theme button */}
             <button className="theme-btn" disabled title="Theme switching coming soon">
               🌙
             </button>
-            
-              <>
-                <button onClick={openLoginModal} className="btn-outline">
-                  Login
-                </button>
-                <button onClick={openSignupModal} className="btn-primary">
-                  Get Started
-                </button>
-              </>
-            
+
+            {/* Login button */}
+            <button onClick={openLoginModal} className="btn-outline">
+              Login
+            </button>
+
+            {/* Emoji Signin Button - No background, just emoji */}
+            <button 
+              onClick={openSignupModal} 
+              className="emoji-signin-btn"
+              title="Get Started"
+              aria-label="Get Started"
+            >
+              👤
+            </button>
           </div>
         </div>
       </header>

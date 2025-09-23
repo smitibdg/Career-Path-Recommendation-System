@@ -3,60 +3,108 @@ import { Link } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => {
+  // 🎯 REPLACE THESE WITH YOUR ACTUAL INFORMATION
+  const developerInfo = {
+    name: "Smiti Badugu",
+    email: "smitibadugu08@gmail.com",
+    portfolio: "https://smiti-portfolio.com",
+    github: "https://github.com/smitibdg",
+    linkedin: "https://www.linkedin.com/in/smiti-badugu-8313a9211/"
+  };
+
+
   return (
     <footer className="footer">
       <div className="container">
-        <div className="footer-content">
-          <div className="footer-section">
-            <div className="footer-logo">
-              <span className="logo-icon">🎯</span>
-              <span className="logo-text">CareerPath</span>
+        {/* Developer Credits Section */}
+        <div className="developer-credits">
+          <div className="developer-info">
+            <div className="developer-avatar">
+              <span className="avatar-icon">👨‍💻</span>
             </div>
-            <p className="footer-description">
-              Empowering students to discover their ideal career paths through 
-              scientific assessment and intelligent recommendations.
-            </p>
-            <div className="social-links">
-              <a href="#" aria-label="Facebook">📘</a>
-              <a href="#" aria-label="Twitter">🐦</a>
-              <a href="#" aria-label="LinkedIn">💼</a>
-              <a href="#" aria-label="Instagram">📷</a>
+            <div className="developer-details">
+              <h4 className="developer-name">Developed by Smiti Badugu</h4>
+              <p className="developer-title">Data Science Student & AI/ML Enthusiast</p>
+              <div className="developer-skills">
+                <span className="skill-tag">React.js</span>
+                <span className="skill-tag">Node.js</span>
+                <span className="skill-tag">Python</span>
+                <span className="skill-tag">Machine Learning</span>
+                <span className="skill-tag">UI/UX Design</span>
+              </div>
+              <div className="developer-links">
+                <a href={developerInfo.portfolio} 
+                className="dev-link portfolio" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="Visit Portfolio"
+                >
+                  <span className="link-icon">🌐</span>
+                  Portfolio
+                </a>
+                
+                <a href={developerInfo.github}
+                className="dev-link github" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="Visit GitHub Profile"
+                >
+                  <span className="link-icon">💻</span>
+                  GitHub
+                </a>
+                <a href={developerInfo.linkedin} className="dev-link linkedin" target="_blank" rel="noopener noreferrer" aria-label="Visit LinkedIn Profile">
+                  <span className="link-icon">💼</span>
+                  LinkedIn
+                </a>
+                <a href={`mailto:${developerInfo.email}?subject=Career Path Project Inquiry&body=Hi ${developerInfo.name},%0A%0AI found your Career Path Recommendation System project and would like to connect!`} 
+                className="dev-link email" aria-label="Send Email">
+                  <span className="link-icon">📧</span>
+                  Email
+                </a>
+              </div>
             </div>
           </div>
-
-          <div className="footer-section">
-            <h4>Quick Links</h4>
-            <ul className="footer-links">
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/features">Features</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
-            <h4>Resources</h4>
-            <ul className="footer-links">
-              <li><Link to="/career-guide">Career Guide</Link></li>
-              <li><Link to="/blog">Blog</Link></li>
-              <li><Link to="/faq">FAQ</Link></li>
-              <li><Link to="/support">Support</Link></li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
-            <h4>Legal</h4>
-            <ul className="footer-links">
-              <li><Link to="/privacy">Privacy Policy</Link></li>
-              <li><Link to="/terms">Terms of Service</Link></li>
-              <li><Link to="/cookies">Cookie Policy</Link></li>
-            </ul>
+          <div className="project-info">
+            <div className="project-stats">
+              <div className="stat-item">
+                <span className="stat-value">5</span>
+                <span className="stat-label">Assessment Types</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-value">100+</span>
+                <span className="stat-label">Questions</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-value">AI-Powered</span>
+                <span className="stat-label">Recommendations</span>
+              </div>
+            </div>
+            <div className="tech-stack">
+              <h5>Built with Modern Technologies</h5>
+              <div className="tech-icons">
+                <span className="tech-icon" title="React.js">⚛️</span>
+                <span className="tech-icon" title="JavaScript">🟨</span>
+                <span className="tech-icon" title="CSS3">🎨</span>
+                <span className="tech-icon" title="HTML5">📄</span>
+                <span className="tech-icon" title="Node.js">🟢</span>
+                <span className="tech-icon" title="Python">🐍</span>
+                <span className="tech-icon" title="Machine Learning">🤖</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; 2024 CareerPath Recommendation System. All rights reserved.</p>
-          <p>Made with ❤️ for confused students everywhere</p>
+          <div className="footer-bottom-content">
+            <div className="copyright-section">
+              <p>&copy; 2024 CareerPath Recommendation System. All rights reserved.</p>
+              <p>Made with ❤️ for confused students everywhere</p>
+            </div>
+            <div className="project-badge">
+              <span className="badge-text">🎓 Final Year Project</span>
+              <span className="badge-year">2025-26</span>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
