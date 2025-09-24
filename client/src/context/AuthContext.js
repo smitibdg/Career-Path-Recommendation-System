@@ -22,62 +22,76 @@ export const AuthProvider = ({ children }) => {
   // ✅ API Configuration
   const API_BASE_URL = 'http://localhost:5000/api';
 
-  // ✅ Load user from localStorage on app start
+  // ✅ FIXED: Load user from localStorage on app start with validation
   useEffect(() => {
-    const token = localStorage.getItem('token'); // FIXED: Look for 'token' not 'authToken'
-    const userData = localStorage.getItem('userData');
-    
-    if (token && userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-        setIsAuthenticated(true);
-        console.log('✅ User restored from localStorage:', parsedUser);
-      } catch (error) {
-        console.error('❌ Error parsing stored user data:', error);
-        // Clear corrupted data
-        localStorage.removeItem('token');
-        localStorage.removeItem('userData');
+    const loadUserFromStorage = async () => {
+      const token = localStorage.getItem('token');
+      const userData = localStorage.getItem('userData');
+      
+      console.log('🔄 [AuthContext] Loading user from storage...');
+      console.log('🔑 Token exists:', !!token);
+      console.log('👤 UserData exists:', !!userData);
+      
+      if (token && userData) {
+        try {
+          const parsedUser = JSON.parse(userData);
+          
+          // ✅ Validate token format
+          if (validateTokenFormat(token)) {
+            setUser(parsedUser);
+            setIsAuthenticated(true);
+            console.log('✅ [AuthContext] User restored from localStorage:', parsedUser);
+          } else {
+            console.log('❌ [AuthContext] Invalid token format, clearing storage');
+            clearAllStorage();
+          }
+        } catch (error) {
+          console.error('❌ [AuthContext] Error parsing stored user data:', error);
+          clearAllStorage();
+        }
+      } else {
+        console.log('⚠️ [AuthContext] No stored user data found');
       }
-    }
+    };
+
+    loadUserFromStorage();
   }, []);
 
   // ✅ Token validation helper
-  const validateAndClearToken = () => {
-    const token = localStorage.getItem('token');
+  const validateTokenFormat = (token) => {
     if (!token) return false;
     
     try {
       const parts = token.split('.');
       if (parts.length !== 3) {
-        console.log('🔴 Invalid token format, clearing...');
-        localStorage.removeItem('token');
-        localStorage.removeItem('userData');
-        localStorage.removeItem('userProfile');
         return false;
       }
       return true;
     } catch (error) {
-      console.log('🔴 Token validation failed, clearing...');
-      localStorage.removeItem('token');
-      localStorage.removeItem('userData');
-      localStorage.removeItem('userProfile');
       return false;
     }
   };
 
-  // ✅ FIXED LOGIN FUNCTION
+  // ✅ Clear all storage helper
+  const clearAllStorage = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('assessmentData');
+    setUser(null);
+    setIsAuthenticated(false);
+  };
+
+  // ✅ FIXED LOGIN FUNCTION with better error handling
   const login = async (email, password) => {
     try {
       setIsLoading(true);
       setError('');
 
-      // Clear any existing invalid tokens first
-      localStorage.removeItem('token');
-      localStorage.removeItem('userData');
-      localStorage.removeItem('userProfile');
+      // Clear any existing data first
+      clearAllStorage();
 
-      console.log('Attempting login with:', { email });
+      console.log('🔄 [AuthContext] Attempting login with:', { email });
 
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
@@ -87,35 +101,35 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password }),
       });
 
-      console.log('Login response status:', response.status);
+      console.log('📡 [AuthContext] Login response status:', response.status);
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ message: 'Server error' }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Login response data:', data);
+      console.log('📥 [AuthContext] Login response data:', data);
 
-      if (data.success && data.token) {
-        // ✅ FIXED: Store both token and user data with consistent keys
-        localStorage.setItem('token', data.token); // Changed from 'authToken' to 'token'
+      if (data.success && data.token && data.user) {
+        // ✅ Store with consistent keys
+        localStorage.setItem('token', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
         
         setUser(data.user);
         setIsAuthenticated(true);
         
-        console.log('✅ Login successful, stored token and user data');
+        console.log('✅ [AuthContext] Login successful, navigating to dashboard');
         
         // Navigate to dashboard
         navigate('/dashboard');
         
         return { success: true, message: data.message };
       } else {
-        throw new Error(data.message || 'Login failed - no token received');
+        throw new Error(data.message || 'Login failed - invalid response');
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('💥 [AuthContext] Login error:', error);
       
       let errorMessage = 'Login failed. Please try again.';
       
@@ -128,6 +142,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       setError(errorMessage);
+      clearAllStorage();
       return { success: false, message: errorMessage };
     } finally {
       setIsLoading(false);
@@ -140,12 +155,9 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(true);
       setError('');
 
-      // Clear any existing tokens first
-      localStorage.removeItem('token');
-      localStorage.removeItem('userData');
-      localStorage.removeItem('userProfile');
+      clearAllStorage();
 
-      console.log('Attempting signup with:', { name, email });
+      console.log('🔄 [AuthContext] Attempting signup with:', { name, email });
 
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
@@ -155,35 +167,33 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({ name, email, password }),
       });
 
-      console.log('Signup response status:', response.status);
+      console.log('📡 [AuthContext] Signup response status:', response.status);
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({ message: 'Server error' }));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('Signup response data:', data);
+      console.log('📥 [AuthContext] Signup response data:', data);
 
-      if (data.success && data.token) {
-        // ✅ FIXED: Store both token and user data with consistent keys
-        localStorage.setItem('token', data.token); // Changed from 'authToken' to 'token'
+      if (data.success && data.token && data.user) {
+        localStorage.setItem('token', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
         
         setUser(data.user);
         setIsAuthenticated(true);
         
-        console.log('✅ Signup successful, stored token and user data');
+        console.log('✅ [AuthContext] Signup successful, navigating to profile creation');
         
-        // Navigate to profile creation
         navigate('/profile-creation');
         
         return { success: true, message: data.message };
       } else {
-        throw new Error(data.message || 'Signup failed - no token received');
+        throw new Error(data.message || 'Signup failed - invalid response');
       }
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error('💥 [AuthContext] Signup error:', error);
       
       let errorMessage = 'Signup failed. Please try again.';
       
@@ -196,6 +206,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       setError(errorMessage);
+      clearAllStorage();
       return { success: false, message: errorMessage };
     } finally {
       setIsLoading(false);
@@ -203,17 +214,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    // ✅ FIXED: Clear all stored data with consistent keys
-    localStorage.removeItem('token'); // Changed from 'authToken' to 'token'
-    localStorage.removeItem('userData');
-    localStorage.removeItem('userProfile');
-    localStorage.removeItem('assessmentData');
-    
-    setUser(null);
-    setIsAuthenticated(false);
+    console.log('🔄 [AuthContext] Logging out user');
+    clearAllStorage();
     setError('');
-    
-    console.log('✅ User logged out, all data cleared');
     navigate('/');
   };
 
@@ -230,7 +233,8 @@ export const AuthProvider = ({ children }) => {
     signup,
     logout,
     clearError,
-    validateAndClearToken, // ✅ NEW: Expose validation function
+    validateTokenFormat,
+    clearAllStorage
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -4,9 +4,9 @@ import { useUser } from '../../../context/UserContext';
 
 
 const TestCards = () => {
-  // Get user context with education level
-  const { getQuestionLevel, hasEducationLevel, currentEducationLevel, profile } = useUser();
-  
+  // ✅ FIXED: Get user context with ALL needed variables including 'profile'
+  const { getQuestionLevel, hasEducationLevel, hasProfile, currentEducationLevel, profile, profileLoaded } = useUser();
+
   // Use Set to track unique completed tests (prevents duplicates)
   const [completedTests, setCompletedTests] = useState(new Set());
   const [activeTest, setActiveTest] = useState(null);
@@ -31,6 +31,9 @@ const TestCards = () => {
   // Get user's education level and question level
   const userEducationLevel = currentEducationLevel || profile?.educationLevel || 'intermediate-12th';
   const questionLevel = getQuestionLevel();
+
+  // ✅ FIXED: Better profile checking
+  const showProfileWarning = profileLoaded && (!hasProfile() || !hasEducationLevel());
 
   const tests = [
     {
@@ -1338,7 +1341,7 @@ const TestCards = () => {
         )}
       </div>
 
-      {!hasEducationLevel() && (
+      {showProfileWarning && (
         <div className="education-warning">
           <div className="warning-content">
             <span className="warning-icon">⚠️</span>
@@ -1429,7 +1432,7 @@ const TestCards = () => {
       </div>
 
       {/* Test Modal - Shows your complete education-level questions */}
-      {showModal && activeTest && hasEducationLevel() && (
+      {showModal && activeTest && hasEducationLevel() && hasProfile() && (
         <CompleteTestModal
           testType={activeTest}
           testData={tests.find(t => t.id === activeTest)}

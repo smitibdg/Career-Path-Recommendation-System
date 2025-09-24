@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 
-// ✅ FIXED: Use correct API base URL
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 // Initial state
@@ -10,6 +9,7 @@ const initialState = {
   isAuthenticated: false,
   loading: false,
   error: null,
+  profileLoaded: false, // ✅ NEW: Track if profile has been loaded from API
   assessmentProgress: {
     personality: { completed: false, score: null, responses: [] },
     skills: { completed: false, score: null, responses: [] },
@@ -28,6 +28,7 @@ const actionTypes = {
   CLEAR_ERROR: 'CLEAR_ERROR',
   SET_USER: 'SET_USER',
   SET_PROFILE: 'SET_PROFILE',
+  SET_PROFILE_LOADED: 'SET_PROFILE_LOADED', // ✅ NEW
   LOGOUT_USER: 'LOGOUT_USER',
   UPDATE_ASSESSMENT_PROGRESS: 'UPDATE_ASSESSMENT_PROGRESS',
   COMPLETE_ASSESSMENT: 'COMPLETE_ASSESSMENT',
@@ -62,9 +63,13 @@ const userReducer = (state, action) => {
         ...state,
         profile: action.payload,
         currentEducationLevel: action.payload?.educationLevel,
+        profileLoaded: true, // ✅ Mark as loaded
         loading: false,
         error: null
       };
+
+    case actionTypes.SET_PROFILE_LOADED: // ✅ NEW
+      return { ...state, profileLoaded: action.payload };
 
     case actionTypes.SET_EDUCATION_LEVEL:
       return {
@@ -77,7 +82,8 @@ const userReducer = (state, action) => {
       return {
         ...state,
         profile: { ...state.profile, ...action.payload },
-        currentEducationLevel: action.payload.educationLevel || state.currentEducationLevel
+        currentEducationLevel: action.payload.educationLevel || state.currentEducationLevel,
+        profileLoaded: true // ✅ Mark as loaded
       };
 
     case actionTypes.LOGOUT_USER:
@@ -117,37 +123,54 @@ const userReducer = (state, action) => {
   }
 };
 
-// Create context
 const UserContext = createContext();
 
-// Context provider component
 export const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialState);
 
-  // Load user data from localStorage on mount
+  // ✅ FIXED: Load user data from localStorage on mount
   useEffect(() => {
     const loadUserData = () => {
       try {
+        console.log('🔄 [UserContext] Loading user data from localStorage...');
+        
         const userData = localStorage.getItem('userData');
         const profileData = localStorage.getItem('userProfile');
         
         if (userData) {
           const user = JSON.parse(userData);
           dispatch({ type: actionTypes.SET_USER, payload: user });
+          console.log('👤 [UserContext] User loaded from localStorage:', user);
         }
         
         if (profileData) {
           const profile = JSON.parse(profileData);
           dispatch({ type: actionTypes.SET_PROFILE, payload: profile });
+          console.log('📋 [UserContext] Profile loaded from localStorage:', profile);
+        } else {
+          // ✅ If no profile in localStorage, mark as not loaded yet
+          dispatch({ type: actionTypes.SET_PROFILE_LOADED, payload: false });
         }
       } catch (error) {
-        console.error('Error loading user data:', error);
+        console.error('💥 [UserContext] Error loading user data:', error);
         dispatch({ type: actionTypes.SET_ERROR, payload: 'Failed to load user data' });
       }
     };
 
     loadUserData();
   }, []);
+
+  // ✅ FIXED: Auto-fetch profile when user is loaded but no profile exists
+  useEffect(() => {
+    const autoFetchProfile = async () => {
+      if (state.user && !state.profile && !state.profileLoaded && !state.loading) {
+        console.log('🔄 [UserContext] Auto-fetching profile for logged-in user...');
+        await getUserProfile(true);
+      }
+    };
+
+    autoFetchProfile();
+  }, [state.user, state.profile, state.profileLoaded, state.loading]);
 
   // Save user data to localStorage whenever user changes
   useEffect(() => {
@@ -172,15 +195,16 @@ export const UserProvider = ({ children }) => {
     return localStorage.getItem('token') || state.user?.token;
   };
 
-  // ✅ API function to get user profile
+  // ✅ IMPROVED: API function to get user profile
   const getUserProfile = async (forceRefresh = false) => {
     try {
       console.log('🔄 [getUserProfile] Starting...');
-      console.log('🔍 [getUserProfile] API URL:', API_BASE_URL);
+      console.log('🔍 [getUserProfile] Force refresh:', forceRefresh);
       console.log('👤 [getUserProfile] User:', state.user);
       
       if (!state.user) {
         console.log('❌ [getUserProfile] No user found');
+        dispatch({ type: actionTypes.SET_PROFILE_LOADED, payload: true });
         return { success: false, error: 'No user logged in' };
       }
 
@@ -201,7 +225,6 @@ export const UserProvider = ({ children }) => {
       });
 
       console.log('📡 [getUserProfile] Response status:', response.status);
-      console.log('📡 [getUserProfile] Response ok:', response.ok);
       
       if (response.ok) {
         const data = await response.json();
@@ -210,20 +233,28 @@ export const UserProvider = ({ children }) => {
         if (data.profile || data.user) {
           const profileData = data.profile || data.user || data;
           dispatch({ type: actionTypes.SET_PROFILE, payload: profileData });
+          console.log('✅ [getUserProfile] Profile set successfully');
           return { success: true, profile: profileData };
         } else {
-          console.log('⚠️ [getUserProfile] No profile in response');
+          console.log('⚠️ [getUserProfile] No profile data in response');
+          dispatch({ type: actionTypes.SET_PROFILE_LOADED, payload: true });
           return { success: false, error: 'No profile data found' };
         }
+      } else if (response.status === 404) {
+        console.log('📭 [getUserProfile] Profile not found (404)');
+        dispatch({ type: actionTypes.SET_PROFILE_LOADED, payload: true });
+        return { success: false, error: 'Profile not found' };
       } else {
         const errorData = await response.json().catch(() => ({ message: 'API Error' }));
         console.log('❌ [getUserProfile] Error response:', errorData);
         dispatch({ type: actionTypes.SET_ERROR, payload: errorData.message || 'Failed to fetch profile' });
+        dispatch({ type: actionTypes.SET_PROFILE_LOADED, payload: true });
         return { success: false, error: errorData.message || 'Failed to fetch profile' };
       }
     } catch (error) {
       console.error('💥 [getUserProfile] Catch error:', error);
       dispatch({ type: actionTypes.SET_ERROR, payload: error.message });
+      dispatch({ type: actionTypes.SET_PROFILE_LOADED, payload: true });
       return { success: false, error: error.message };
     } finally {
       dispatch({ type: actionTypes.SET_LOADING, payload: false });
@@ -421,6 +452,11 @@ export const UserProvider = ({ children }) => {
     return !!(state.currentEducationLevel || state.profile?.educationLevel);
   };
 
+  // ✅ NEW: Check if profile exists (considering loading state)
+  const hasProfile = () => {
+    return !!(state.profile && state.profileLoaded);
+  };
+
   const contextValue = {
     // State
     ...state,
@@ -445,7 +481,8 @@ export const UserProvider = ({ children }) => {
     // Helper functions
     getQuestionLevel,
     getEducationLevel,
-    hasEducationLevel
+    hasEducationLevel,
+    hasProfile // ✅ NEW
   };
 
   return (
@@ -455,7 +492,6 @@ export const UserProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the context
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
