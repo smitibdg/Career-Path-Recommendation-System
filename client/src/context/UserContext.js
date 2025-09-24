@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 
+// ✅ FIXED: Use correct API base URL
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 // Initial state
 const initialState = {
   user: null,
@@ -14,8 +17,8 @@ const initialState = {
     situational: { completed: false, score: null, responses: [] },
     values: { completed: false, score: null, responses: [] }
   },
-  currentEducationLevel: null, // NEW: Track user's education level
-  availableQuestionLevels: ['Foundation', 'Intermediate', 'Advanced'] // NEW
+  currentEducationLevel: null,
+  availableQuestionLevels: ['Foundation', 'Intermediate', 'Advanced']
 };
 
 // Action types
@@ -29,32 +32,21 @@ const actionTypes = {
   UPDATE_ASSESSMENT_PROGRESS: 'UPDATE_ASSESSMENT_PROGRESS',
   COMPLETE_ASSESSMENT: 'COMPLETE_ASSESSMENT',
   RESET_ASSESSMENTS: 'RESET_ASSESSMENTS',
-  SET_EDUCATION_LEVEL: 'SET_EDUCATION_LEVEL', // NEW
-  UPDATE_USER_PROFILE: 'UPDATE_USER_PROFILE' // NEW
+  SET_EDUCATION_LEVEL: 'SET_EDUCATION_LEVEL',
+  UPDATE_USER_PROFILE: 'UPDATE_USER_PROFILE'
 };
 
 // Reducer function
 const userReducer = (state, action) => {
   switch (action.type) {
     case actionTypes.SET_LOADING:
-      return {
-        ...state,
-        loading: action.payload,
-        error: null
-      };
+      return { ...state, loading: action.payload, error: null };
 
     case actionTypes.SET_ERROR:
-      return {
-        ...state,
-        error: action.payload,
-        loading: false
-      };
+      return { ...state, error: action.payload, loading: false };
 
     case actionTypes.CLEAR_ERROR:
-      return {
-        ...state,
-        error: null
-      };
+      return { ...state, error: null };
 
     case actionTypes.SET_USER:
       return {
@@ -69,35 +61,27 @@ const userReducer = (state, action) => {
       return {
         ...state,
         profile: action.payload,
-        currentEducationLevel: action.payload?.educationLevel, // NEW: Set education level
+        currentEducationLevel: action.payload?.educationLevel,
         loading: false,
         error: null
       };
 
-    case actionTypes.SET_EDUCATION_LEVEL: // NEW ACTION
+    case actionTypes.SET_EDUCATION_LEVEL:
       return {
         ...state,
         currentEducationLevel: action.payload,
-        profile: {
-          ...state.profile,
-          educationLevel: action.payload
-        }
+        profile: { ...state.profile, educationLevel: action.payload }
       };
 
-    case actionTypes.UPDATE_USER_PROFILE: // NEW ACTION
+    case actionTypes.UPDATE_USER_PROFILE:
       return {
         ...state,
-        profile: {
-          ...state.profile,
-          ...action.payload
-        },
+        profile: { ...state.profile, ...action.payload },
         currentEducationLevel: action.payload.educationLevel || state.currentEducationLevel
       };
 
     case actionTypes.LOGOUT_USER:
-      return {
-        ...initialState
-      };
+      return { ...initialState };
 
     case actionTypes.UPDATE_ASSESSMENT_PROGRESS:
       return {
@@ -126,10 +110,7 @@ const userReducer = (state, action) => {
       };
 
     case actionTypes.RESET_ASSESSMENTS:
-      return {
-        ...state,
-        assessmentProgress: initialState.assessmentProgress
-      };
+      return { ...state, assessmentProgress: initialState.assessmentProgress };
 
     default:
       return state;
@@ -186,7 +167,180 @@ export const UserProvider = ({ children }) => {
     }
   }, [state.profile]);
 
-  // Actions
+  // Helper function to get auth token
+  const getAuthToken = () => {
+    return localStorage.getItem('token') || state.user?.token;
+  };
+
+  // ✅ API function to get user profile
+  const getUserProfile = async (forceRefresh = false) => {
+    try {
+      console.log('🔄 [getUserProfile] Starting...');
+      console.log('🔍 [getUserProfile] API URL:', API_BASE_URL);
+      console.log('👤 [getUserProfile] User:', state.user);
+      
+      if (!state.user) {
+        console.log('❌ [getUserProfile] No user found');
+        return { success: false, error: 'No user logged in' };
+      }
+
+      dispatch({ type: actionTypes.SET_LOADING, payload: true });
+
+      const token = getAuthToken();
+      console.log('🔑 [getUserProfile] Token:', token ? 'Present' : 'Missing');
+
+      const url = `${API_BASE_URL}/api/profile`;
+      console.log('🌐 [getUserProfile] Fetch URL:', url);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
+      });
+
+      console.log('📡 [getUserProfile] Response status:', response.status);
+      console.log('📡 [getUserProfile] Response ok:', response.ok);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('📥 [getUserProfile] Success data:', data);
+        
+        if (data.profile || data.user) {
+          const profileData = data.profile || data.user || data;
+          dispatch({ type: actionTypes.SET_PROFILE, payload: profileData });
+          return { success: true, profile: profileData };
+        } else {
+          console.log('⚠️ [getUserProfile] No profile in response');
+          return { success: false, error: 'No profile data found' };
+        }
+      } else {
+        const errorData = await response.json().catch(() => ({ message: 'API Error' }));
+        console.log('❌ [getUserProfile] Error response:', errorData);
+        dispatch({ type: actionTypes.SET_ERROR, payload: errorData.message || 'Failed to fetch profile' });
+        return { success: false, error: errorData.message || 'Failed to fetch profile' };
+      }
+    } catch (error) {
+      console.error('💥 [getUserProfile] Catch error:', error);
+      dispatch({ type: actionTypes.SET_ERROR, payload: error.message });
+      return { success: false, error: error.message };
+    } finally {
+      dispatch({ type: actionTypes.SET_LOADING, payload: false });
+    }
+  };
+
+  // ✅ API function to create user profile
+  const createUserProfile = async (profileData) => {
+    try {
+      console.log('🔄 [createUserProfile] Starting...');
+      console.log('📊 [createUserProfile] Profile data:', profileData);
+      console.log('👤 [createUserProfile] User:', state.user);
+      
+      if (!state.user) {
+        console.log('❌ [createUserProfile] No user found');
+        return { success: false, error: 'No user logged in' };
+      }
+
+      dispatch({ type: actionTypes.SET_LOADING, payload: true });
+
+      const token = getAuthToken();
+      console.log('🔑 [createUserProfile] Token:', token ? 'Present' : 'Missing');
+
+      const url = `${API_BASE_URL}/api/profile`;
+      console.log('🌐 [createUserProfile] Fetch URL:', url);
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
+        body: JSON.stringify({
+          ...profileData,
+          userId: state.user.id || state.user._id,
+          email: profileData.email || state.user.email
+        }),
+      });
+
+      console.log('📡 [createUserProfile] Response status:', response.status);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('📥 [createUserProfile] Success data:', data);
+        
+        const profileResult = data.profile || data.user || data;
+        dispatch({ type: actionTypes.SET_PROFILE, payload: profileResult });
+        return { success: true, profile: profileResult };
+      } else {
+        const errorData = await response.json().catch(() => ({ message: 'API Error' }));
+        console.log('❌ [createUserProfile] Error response:', errorData);
+        return { success: false, error: errorData.message || 'Failed to create profile' };
+      }
+    } catch (error) {
+      console.error('💥 [createUserProfile] Catch error:', error);
+      return { success: false, error: error.message };
+    } finally {
+      dispatch({ type: actionTypes.SET_LOADING, payload: false });
+    }
+  };
+
+  // ✅ API function to update user profile
+  const updateUserProfile = async (profileData) => {
+    try {
+      console.log('🔄 [updateUserProfile] Starting...');
+      console.log('📊 [updateUserProfile] Profile data:', profileData);
+      console.log('👤 [updateUserProfile] User:', state.user);
+      
+      if (!state.user) {
+        console.log('❌ [updateUserProfile] No user found');
+        return { success: false, error: 'No user logged in' };
+      }
+
+      dispatch({ type: actionTypes.SET_LOADING, payload: true });
+
+      const token = getAuthToken();
+      console.log('🔑 [updateUserProfile] Token:', token ? 'Present' : 'Missing');
+
+      const url = `${API_BASE_URL}/api/profile`;
+      console.log('🌐 [updateUserProfile] Fetch URL:', url);
+
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
+        body: JSON.stringify({
+          ...profileData,
+          userId: state.user.id || state.user._id,
+          email: profileData.email || state.user.email
+        }),
+      });
+
+      console.log('📡 [updateUserProfile] Response status:', response.status);
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log('📥 [updateUserProfile] Success data:', data);
+        
+        const profileResult = data.profile || data.user || data;
+        dispatch({ type: actionTypes.SET_PROFILE, payload: profileResult });
+        return { success: true, profile: profileResult };
+      } else {
+        const errorData = await response.json().catch(() => ({ message: 'API Error' }));
+        console.log('❌ [updateUserProfile] Error response:', errorData);
+        return { success: false, error: errorData.message || 'Failed to update profile' };
+      }
+    } catch (error) {
+      console.error('💥 [updateUserProfile] Catch error:', error);
+      return { success: false, error: error.message };
+    } finally {
+      dispatch({ type: actionTypes.SET_LOADING, payload: false });
+    }
+  };
+
+  // Basic state actions
   const setLoading = (loading) => {
     dispatch({ type: actionTypes.SET_LOADING, payload: loading });
   };
@@ -207,20 +361,15 @@ export const UserProvider = ({ children }) => {
     dispatch({ type: actionTypes.SET_PROFILE, payload: profileData });
   };
 
-  // NEW: Set education level
   const setEducationLevel = (educationLevel) => {
     dispatch({ type: actionTypes.SET_EDUCATION_LEVEL, payload: educationLevel });
-  };
-
-  // NEW: Update user profile
-  const updateUserProfile = (profileUpdates) => {
-    dispatch({ type: actionTypes.UPDATE_USER_PROFILE, payload: profileUpdates });
   };
 
   const logoutUser = () => {
     localStorage.removeItem('userData');
     localStorage.removeItem('userProfile');
     localStorage.removeItem('assessmentData');
+    localStorage.removeItem('token');
     dispatch({ type: actionTypes.LOGOUT_USER });
   };
 
@@ -237,7 +386,6 @@ export const UserProvider = ({ children }) => {
       payload: { testType, score, responses }
     });
     
-    // Save to localStorage
     const assessmentData = JSON.parse(localStorage.getItem('assessmentData') || '{}');
     assessmentData[testType] = { score, responses, completedAt: new Date().toISOString() };
     localStorage.setItem('assessmentData', JSON.stringify(assessmentData));
@@ -248,7 +396,7 @@ export const UserProvider = ({ children }) => {
     dispatch({ type: actionTypes.RESET_ASSESSMENTS });
   };
 
-  // NEW: Get appropriate question level based on education
+  // Helper functions
   const getQuestionLevel = () => {
     const educationLevel = state.currentEducationLevel || state.profile?.educationLevel;
     
@@ -265,7 +413,10 @@ export const UserProvider = ({ children }) => {
     return levelMap[educationLevel] || 'Foundation';
   };
 
-  // NEW: Check if user has completed profile with education level
+  const getEducationLevel = () => {
+    return state.currentEducationLevel || state.profile?.educationLevel || 'Not set';
+  };
+
   const hasEducationLevel = () => {
     return !!(state.currentEducationLevel || state.profile?.educationLevel);
   };
@@ -274,21 +425,26 @@ export const UserProvider = ({ children }) => {
     // State
     ...state,
     
-    // Actions
+    // Basic Actions
     setLoading,
     setError,
     clearError,
     setUser,
     setProfile,
-    setEducationLevel, // NEW
-    updateUserProfile, // NEW
+    setEducationLevel,
     logoutUser,
     updateAssessmentProgress,
     completeAssessment,
     resetAssessments,
     
-    // NEW: Helper functions
+    // API Functions
+    getUserProfile,
+    createUserProfile,
+    updateUserProfile,
+    
+    // Helper functions
     getQuestionLevel,
+    getEducationLevel,
     hasEducationLevel
   };
 

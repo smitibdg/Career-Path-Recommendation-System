@@ -127,11 +127,6 @@ exports.login = async (req, res) => {
         email: user.email,
         profileCompleted: user.profileCompleted
       },
-      profile: profile ? {
-        educationLevel: profile.educationLevel,
-        assessmentLevel: profile.assessmentLevel,
-        assessmentProgress: profile.getAssessmentProgress()
-      } : null
     });
 
   } catch (error) {
@@ -150,30 +145,15 @@ exports.getCurrentUser = async (req, res) => {
     const userId = req.user.userId;
 
     const user = await User.findById(userId).select('-password');
+    const profile = await Profile.findOne({ user: req.user.userId });
+
     if (!user) {
       return res.status(404).json({
         success: false,
         message: 'User not found'
       });
     }
-
-    // Get profile if exists
-    const profile = await Profile.findOne({ user: userId });
-
-    res.status(200).json({
-      success: true,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        profileCompleted: user.profileCompleted
-      },
-      profile: profile ? {
-        educationLevel: profile.educationLevel,
-        assessmentLevel: profile.assessmentLevel,
-        assessmentProgress: profile.getAssessmentProgress()
-      } : null
-    });
+    
 
   } catch (error) {
     console.error('❌ Get current user error:', error);

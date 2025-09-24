@@ -27,8 +27,8 @@ const Sidebar = ({ activeSection, setActiveSection, user }) => {
     {
       id: 'profile',
       icon: '👤',
-      label: 'Profile Settings',
-      description: 'Edit profile info'
+      label: 'User Profile', // ✅ Better label
+      description: 'View & edit profile'
     }
   ];
 
@@ -51,7 +51,7 @@ const Sidebar = ({ activeSection, setActiveSection, user }) => {
           <button
             key={item.id}
             className={`sidebar-item ${activeSection === item.id ? 'active' : ''}`}
-            onClick={() => setActiveSection(item.id)}
+            onClick={() => setActiveSection(item.id)} // ✅ Use new handler
             title={item.label}
           >
             <span className="sidebar-icon">{item.icon}</span>
@@ -65,7 +65,7 @@ const Sidebar = ({ activeSection, setActiveSection, user }) => {
 
       {/* Bottom Actions */}
       <div className="sidebar-footer">
-        <button className="sidebar-action" odisabled title="Theme switching coming soon">
+        <button className="sidebar-action" disabled title="Theme switching coming soon">
           <span className="sidebar-icon">🌙</span>
         </button>
         <button className="sidebar-action" onClick={logout} title="Logout">

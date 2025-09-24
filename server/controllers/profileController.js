@@ -7,8 +7,9 @@ exports.createOrUpdateProfile = async (req, res) => {
     const userId = req.user.userId;
     const profileData = req.body;
 
-    console.log('💾 CREATE/UPDATE Profile - User ID:', userId);
-    console.log('📝 Profile Data:', profileData);
+    console.log('🔴 BACKEND: Profile creation/update request');
+    console.log('🔴 User ID:', userId);
+    console.log('🔴 Profile Data:', JSON.stringify(profileData, null, 2));
 
     // Check if profile already exists
     let profile = await Profile.findOne({ user: userId });
@@ -37,30 +38,32 @@ exports.createOrUpdateProfile = async (req, res) => {
       updatedAt: new Date()
     });
 
-    // Update user's profileCompleted status
-    await User.findByIdAndUpdate(userId, { 
-      profileCompleted: true,
-      updatedAt: new Date()
-    });
-
     // Populate user data for response
     await profile.populate('user', 'name email');
 
-    console.log('✅ Profile saved successfully - Full object:', JSON.stringify(profile, null, 2));
+    console.log('✅ Profile saved successfully');
+    console.log('✅ Profile ID:', profile._id);
+    console.log('✅ Education Level:', profile.educationLevel);
+    console.log('✅ Assessment Level:', profile.assessmentLevel);
 
-    // ENSURE CONSISTENT RESPONSE FORMAT
+    // CONSISTENT RESPONSE FORMAT
     const response = {
       success: true,
       message: 'Profile saved successfully',
-      profile: profile
+      profile: profile.toObject ? profile.toObject() : profile
     };
 
-    console.log('📤 Sending response:', JSON.stringify(response, null, 2));
+    console.log('📤 Sending response format check:');
+    console.log('📤 - success:', response.success);
+    console.log('📤 - profile exists:', !!response.profile);
+    console.log('📤 - profile id:', response.profile._id);
 
     res.status(200).json(response);
 
   } catch (error) {
     console.error('❌ Profile save error:', error);
+    console.error('❌ Error stack:', error.stack);
+    
     res.status(500).json({
       success: false,
       message: 'Server error saving profile',
@@ -86,15 +89,18 @@ exports.getProfile = async (req, res) => {
       });
     }
 
-    console.log('✅ Profile found:', {
+    console.log('✅ Profile found and returned');
+    console.log('✅ Profile details:', {
       id: profile._id,
+      name: profile.name,
       educationLevel: profile.educationLevel,
       assessmentLevel: profile.assessmentLevel
     });
     
     res.status(200).json({
       success: true,
-      profile
+      message: 'Profile retrieved successfully',
+      profile: profile.toObject ? profile.toObject() : profile
     });
 
   } catch (error) {
@@ -113,8 +119,9 @@ exports.updateProfile = async (req, res) => {
     const userId = req.user.userId;
     const updateData = req.body;
 
-    console.log('🔄 UPDATE Profile - User ID:', userId);
-    console.log('📝 Update Data:', updateData);
+    console.log('🔄 UPDATE Profile request');
+    console.log('🔄 User ID:', userId);
+    console.log('🔄 Update Data:', updateData);
 
     const profile = await Profile.findOneAndUpdate(
       { user: userId },
@@ -129,16 +136,12 @@ exports.updateProfile = async (req, res) => {
       });
     }
 
-    console.log('✅ Profile updated successfully:', {
-      id: profile._id,
-      educationLevel: profile.educationLevel,
-      assessmentLevel: profile.assessmentLevel
-    });
+    console.log('✅ Profile updated successfully');
 
     res.status(200).json({
       success: true,
       message: 'Profile updated successfully',
-      profile
+      profile: profile.toObject ? profile.toObject() : profile
     });
 
   } catch (error) {
@@ -168,13 +171,15 @@ exports.completeAssessment = async (req, res) => {
       });
     }
 
-    // Update assessment completion
-    profile.assessmentsCompleted.set(testType, {
-      completed: true,
-      completedAt: new Date(),
-      score: score,
-      responses: responses
-    });
+    // Update assessment completion (only if profile has this method)
+    if (profile.assessmentsCompleted && typeof profile.assessmentsCompleted.set === 'function') {
+      profile.assessmentsCompleted.set(testType, {
+        completed: true,
+        completedAt: new Date(),
+        score: score,
+        responses: responses
+      });
+    }
 
     await profile.save();
 
@@ -183,7 +188,7 @@ exports.completeAssessment = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Assessment completed successfully',
-      assessmentProgress: profile.getAssessmentProgress()
+      assessmentProgress: profile.getAssessmentProgress ? profile.getAssessmentProgress() : {}
     });
 
   } catch (error) {
@@ -213,7 +218,7 @@ exports.getAssessmentProgress = async (req, res) => {
     res.status(200).json({
       success: true,
       assessmentLevel: profile.assessmentLevel,
-      assessmentProgress: profile.getAssessmentProgress()
+      assessmentProgress: profile.getAssessmentProgress ? profile.getAssessmentProgress() : {}
     });
 
   } catch (error) {

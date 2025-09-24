@@ -389,8 +389,8 @@ app.use((req, res, next) => {
 });
 
 // ✅ Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+app.listen(5000, () => {
+  console.log(`🚀 Server running on port ${5000}`);
   console.log(`📡 API available at http://localhost:${PORT}/api`);
   console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
   console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);

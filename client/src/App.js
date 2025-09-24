@@ -12,6 +12,7 @@ import ScrollToTop from './components/common/ScrollToTop/ScrollToTop';
 import LandingPage from './pages/LandingPage/LandingPage';
 import DashboardPage from './pages/DashboardPage/DashboardPage';
 import ProfileCreation from './components/auth/ProfileCreationForm/ProfileCreationForm';
+import ProfileSettings from './components/dashboard/ProfileSettings/ProfileSettings';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 // Protected Route Component
@@ -50,6 +51,14 @@ function App() {
                 } 
               />
 
+              <Route 
+                path="/profile-settings" 
+                element={
+                  <ProtectedRoute>
+                    <ProfileSettings />
+                  </ProtectedRoute>
+                } 
+              />
 
               {/* Catch-all route for 404 errors */}
               <Route path="/404" element={<NotFoundPage />} />
