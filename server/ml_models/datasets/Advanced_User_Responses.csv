@@ -1,0 +1,101 @@
+username,education_level,Question_ID,Answer
+adv01,Advanced,AP001,Strongly Disagree
+adv01,Advanced,AP002,Neutral
+adv01,Advanced,AP003,Strongly Disagree
+adv01,Advanced,AP004,Agree
+adv01,Advanced,AP005,Neutral
+adv01,Advanced,AP006,Strongly Disagree
+adv01,Advanced,AP007,Strongly Disagree
+adv01,Advanced,AP008,Agree
+adv01,Advanced,AP009,Strongly Agree
+adv01,Advanced,AP010,Strongly Agree
+adv01,Advanced,AS001,C
+adv01,Advanced,AS002,C
+adv01,Advanced,AS003,A
+adv01,Advanced,AS004,B
+adv01,Advanced,AS005,B
+adv01,Advanced,AS006,C
+adv01,Advanced,AS007,C
+adv01,Advanced,AS008,B
+adv01,Advanced,AS009,B
+adv01,Advanced,AS010,A
+adv01,Advanced,AC001,D
+adv01,Advanced,AC002,A
+adv01,Advanced,AC003,D
+adv01,Advanced,AC004,A
+adv01,Advanced,AC005,A
+adv01,Advanced,AC006,C
+adv01,Advanced,AC007,D
+adv01,Advanced,AC008,A
+adv01,Advanced,AC009,A
+adv01,Advanced,AC010,A
+adv01,Advanced,AT001,B
+adv01,Advanced,AT002,B
+adv01,Advanced,AT003,A
+adv01,Advanced,AT004,C
+adv01,Advanced,AT005,D
+adv01,Advanced,AT006,D
+adv01,Advanced,AT007,C
+adv01,Advanced,AT008,D
+adv01,Advanced,AT009,A
+adv01,Advanced,AT010,C
+adv01,Advanced,AV001,C
+adv01,Advanced,AV002,D
+adv01,Advanced,AV003,B
+adv01,Advanced,AV004,C
+adv01,Advanced,AV005,A
+adv01,Advanced,AV006,D
+adv01,Advanced,AV007,D
+adv01,Advanced,AV008,D
+adv01,Advanced,AV009,D
+adv01,Advanced,AV010,C
+adv02,Advanced,AP001,Strongly Agree
+adv02,Advanced,AP002,Strongly Disagree
+adv02,Advanced,AP003,Disagree
+adv02,Advanced,AP004,Strongly Disagree
+adv02,Advanced,AP005,Agree
+adv02,Advanced,AP006,Neutral
+adv02,Advanced,AP007,Disagree
+adv02,Advanced,AP008,Neutral
+adv02,Advanced,AP009,Neutral
+adv02,Advanced,AP010,Strongly Agree
+adv02,Advanced,AS001,D
+adv02,Advanced,AS002,A
+adv02,Advanced,AS003,D
+adv02,Advanced,AS004,D
+adv02,Advanced,AS005,C
+adv02,Advanced,AS006,A
+adv02,Advanced,AS007,B
+adv02,Advanced,AS008,A
+adv02,Advanced,AS009,C
+adv02,Advanced,AS010,A
+adv02,Advanced,AC001,C
+adv02,Advanced,AC002,B
+adv02,Advanced,AC003,D
+adv02,Advanced,AC004,A
+adv02,Advanced,AC005,C
+adv02,Advanced,AC006,B
+adv02,Advanced,AC007,A
+adv02,Advanced,AC008,D
+adv02,Advanced,AC009,C
+adv02,Advanced,AC010,B
+adv02,Advanced,AT001,A
+adv02,Advanced,AT002,C
+adv02,Advanced,AT003,B
+adv02,Advanced,AT004,A
+adv02,Advanced,AT005,B
+adv02,Advanced,AT006,C
+adv02,Advanced,AT007,A
+adv02,Advanced,AT008,B
+adv02,Advanced,AT009,C
+adv02,Advanced,AT010,D
+adv02,Advanced,AV001,A
+adv02,Advanced,AV002,B
+adv02,Advanced,AV003,C
+adv02,Advanced,AV004,A
+adv02,Advanced,AV005,D
+adv02,Advanced,AV006,B
+adv02,Advanced,AV007,A
+adv02,Advanced,AV008,C
+adv02,Advanced,AV009,B
+adv02,Advanced,AV010,A

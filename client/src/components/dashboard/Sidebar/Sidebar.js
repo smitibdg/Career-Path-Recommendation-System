@@ -5,6 +5,26 @@ import './Sidebar.css';
 const Sidebar = ({ activeSection, setActiveSection, user }) => {
   const { logout } = useAuth();
 
+  // ADD this function
+  const handleMyResultsClick = () => {
+    const resultsSection = document.getElementById('test-results-section');
+    if (resultsSection) {
+      resultsSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Navigate to assessments page if results not visible
+      setActiveSection('tests'); // This switches to tests section where results will show
+    }
+  };
+
+  // UPDATE the onClick handler for 'results' item
+  const handleItemClick = (itemId) => {
+    if (itemId === 'results') {
+      handleMyResultsClick();
+    } else {
+      setActiveSection(itemId);
+    }
+  };
+
   const sidebarItems = [
     {
       id: 'tests',
@@ -51,7 +71,7 @@ const Sidebar = ({ activeSection, setActiveSection, user }) => {
           <button
             key={item.id}
             className={`sidebar-item ${activeSection === item.id ? 'active' : ''}`}
-            onClick={() => setActiveSection(item.id)} // ✅ Use new handler
+            onClick={() => handleItemClick(item.id)} // ✅ Use new handler
             title={item.label}
           >
             <span className="sidebar-icon">{item.icon}</span>

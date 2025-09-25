@@ -5,6 +5,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+// Add these lines after your existing requires
+const TestResponse = require('./models/TestResponse');
+const Assessment = require('./models/Assessment');
+
+// ✅ IMPORT THE EXISTING USER MODEL (instead of creating a new one)
+const User = require('./models/User');
+
+// ✅ CORRECTED: Remove src from path
+const mlRoutes = require('./routes/ml_models');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -18,6 +28,9 @@ app.use(cors({
 
 // ✅ Middleware
 app.use(express.json());
+
+// ✅ CORRECTED: ML routes
+app.use('/api/ml', mlRoutes);
 
 // ✅ MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/career-path-db';
@@ -33,27 +46,8 @@ mongoose.connect(MONGODB_URI, {
   console.error('❌ MongoDB connection error:', error);
 });
 
-// ✅ UPDATED: Simplified User Schema - Flat Structure (12 columns only)
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  
-  // ✅ FLAT PROFILE FIELDS (no nested profile object)
-  age: { type: Number },
-  gender: { type: String },
-  educationLevel: { type: String },
-  personalityType: { type: String },
-  phoneNumber: { type: String },
-  city: { type: String },
-  state: { type: String },
-  interests: { type: String },
-  
-  // ✅ SINGLE TIMESTAMP
-  timestamp: { type: Date, default: Date.now }
-});
-
-const User = mongoose.model('User', userSchema);
+// ✅ REMOVE THE DUPLICATE USER SCHEMA FROM HERE
+// Delete all the userSchema code from your server.js since it's now in models/User.js
 
 // ✅ Health Check Route
 app.get('/api/health', (req, res) => {
@@ -64,7 +58,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// ✅ Register Route (unchanged)
+// ✅ Register Route (updated to use the new User model)
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -92,13 +86,10 @@ app.post('/api/auth/register', async (req, res) => {
       });
     }
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
     const user = new User({
       name,
       email,
-      password: hashedPassword
+      password // The User model will hash this automatically
     });
 
     await user.save();
@@ -131,7 +122,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// ✅ Login Route (unchanged)
+// ✅ Login Route (updated to use comparePassword method)
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -152,7 +143,8 @@ app.post('/api/auth/login', async (req, res) => {
       });
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    // ✅ USE THE comparePassword METHOD from User model
+    const isValidPassword = await user.comparePassword(password);
     if (!isValidPassword) {
       return res.status(400).json({
         success: false,
@@ -188,7 +180,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// ✅ UPDATED: Profile Creation/Update Route (Flat Structure)
+// ✅ UPDATED: Profile Creation/Update Route
 app.post('/api/profile', async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -210,12 +202,8 @@ app.post('/api/profile', async (req, res) => {
       });
     }
 
-    // ✅ UPDATED: Direct assignment (flat structure)
-    if (req.body.name && req.body.name !== user.name) {
-      user.name = req.body.name;
-    }
-    
-    // Update profile fields directly on user object
+    // ✅ UPDATED: Add profile fields to the User model or handle differently
+    // For now, we'll store profile data in the same User document
     user.age = req.body.age;
     user.gender = req.body.gender;
     user.educationLevel = req.body.educationLevel;
@@ -224,7 +212,7 @@ app.post('/api/profile', async (req, res) => {
     user.city = req.body.city || '';
     user.state = req.body.state || '';
     user.interests = req.body.interests;
-    user.timestamp = new Date();
+    user.profileCompleted = true;
     
     await user.save();
 
@@ -244,8 +232,7 @@ app.post('/api/profile', async (req, res) => {
         phoneNumber: user.phoneNumber,
         city: user.city,
         state: user.state,
-        interests: user.interests,
-        timestamp: user.timestamp
+        interests: user.interests
       }
     });
 
@@ -258,7 +245,7 @@ app.post('/api/profile', async (req, res) => {
   }
 });
 
-// ✅ UPDATED: Get Profile Route (Flat Structure)
+// ✅ Get Profile Route
 app.get('/api/profile', async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -293,8 +280,7 @@ app.get('/api/profile', async (req, res) => {
         phoneNumber: user.phoneNumber,
         city: user.city,
         state: user.state,
-        interests: user.interests,
-        timestamp: user.timestamp
+        interests: user.interests
       }
     });
 
@@ -307,7 +293,7 @@ app.get('/api/profile', async (req, res) => {
   }
 });
 
-// ✅ UPDATED: Profile Update Route for Dashboard (Flat Structure)
+// ✅ Profile Update Route for Dashboard
 app.put('/api/profile', async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -329,11 +315,7 @@ app.put('/api/profile', async (req, res) => {
       });
     }
 
-    // ✅ UPDATED: Direct field updates
-    if (req.body.name && req.body.name !== user.name) {
-      user.name = req.body.name;
-    }
-    
+    // Update fields
     user.age = req.body.age;
     user.gender = req.body.gender;
     user.educationLevel = req.body.educationLevel;
@@ -342,7 +324,6 @@ app.put('/api/profile', async (req, res) => {
     user.city = req.body.city || '';
     user.state = req.body.state || '';
     user.interests = req.body.interests;
-    user.timestamp = new Date();
     
     await user.save();
 
@@ -362,8 +343,7 @@ app.put('/api/profile', async (req, res) => {
         phoneNumber: user.phoneNumber,
         city: user.city,
         state: user.state,
-        interests: user.interests,
-        timestamp: user.timestamp
+        interests: user.interests
       }
     });
 
@@ -393,6 +373,7 @@ app.listen(5000, () => {
   console.log(`🚀 Server running on port ${5000}`);
   console.log(`📡 API available at http://localhost:${PORT}/api`);
   console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
+  console.log(`🤖 ML API: http://localhost:${PORT}/api/ml`);
   console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 

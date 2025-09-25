@@ -65,37 +65,55 @@ const TestModal = ({ testType, testData, onComplete, onClose }) => {
     try {
       const timeTaken = Math.round((Date.now() - startTime) / 60000); // Convert to minutes
       
-      // Prepare responses in the format expected by backend
-      const responses = Object.values(answers);
+      // Prepare responses in the NEW format for backend
+      const responses = Object.values(answers).map(answer => ({
+        questionId: answer.questionId,
+        answer: answer.selectedAnswer, // Use the text answer, not the option index
+        testType: testType
+      }));
       
-      const token = localStorage.getItem('authToken');
-      const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+      // Get user from auth context
+      const user = JSON.parse(localStorage.getItem('user')) || {};
       
-      const response = await fetch(`${API_BASE_URL}/assessments/${testType}/submit`, {
+      // Submit to the ML API endpoint
+      const response = await fetch('/api/ml/predict', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          responses,
-          timeTaken
+          userId: user.id,
+          testResponses: responses,
+          action: 'submit',
+          modelType: 'partial', // Don't run full career prediction for individual tests
+          testType: testType,
+          timeTaken: timeTaken
         })
       });
 
       const data = await response.json();
       
       if (data.success) {
-        onComplete(testType, data);
+        // Call the original onComplete with the new format
+        onComplete(testType, {
+          responses: responses,
+          testType: testType,
+          timeTaken: timeTaken,
+          mlResults: data.data
+        });
       } else {
         console.error('Failed to submit test:', data.message);
+        alert('Error submitting test: ' + data.message);
       }
     } catch (error) {
       console.error('Error submitting test:', error);
+      alert('Error submitting test. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);

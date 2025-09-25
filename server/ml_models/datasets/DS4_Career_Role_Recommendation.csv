@@ -1,0 +1,104 @@
+Career_Cluster,Career_Role,Required_Skills,Education_Level,Avg_Salary_Range,Job_Outlook,Growth_Path,Learning_Resources
+STEM,Data Scientist,Python; Statistics; Machine Learning,Graduation,8-15 LPA,High,Data Analyst > Data Scientist > Senior Data Scientist,Coursera Machine Learning; edX Data Science
+Business,Business Analyst,Excel; SQL; Communication,Graduation,5-10 LPA,Medium,Intern > Analyst > Senior Analyst > Manager,LinkedIn Learning Business Analysis; Udemy Power BI
+Healthcare,Doctor,Biology; Medicine; Ethics,Post-graduation,10-25 LPA,High,Internship > Resident > Specialist > Consultant,Khan Academy Medicine; Coursera Healthcare Management
+IT,Software Developer,Java; Algorithms; System Design,Graduation,6-12 LPA,High,Junior Dev > Developer > Senior Dev > Tech Lead,Codecademy; Leetcode; HackerRank
+Arts,Graphic Designer,Creativity; Adobe Photoshop; Illustrator,Graduation,4-8 LPA,Medium,Junior Designer > Designer > Senior Designer > Art Director,Udemy Graphic Design; Skillshare Illustration
+Engineering,Mechanical Engineer,CAD; Manufacturing; Problem Solving,Graduation,6-12 LPA,Medium,Intern > Engineer > Senior Engineer > Manager,AutoCAD Courses; SolidWorks Training
+Business,Marketing Manager,Marketing; Social Media; Analytics,Graduation,7-14 LPA,High,Marketing Exec > Manager > Senior Manager > Director,Google Digital Marketing; HubSpot Academy
+IT,Web Developer,HTML; CSS; JavaScript; React,12th,4-8 LPA,High,Intern > Junior Dev > Developer > Senior Dev,freeCodeCamp; MDN Web Docs; React Documentation
+Healthcare,Nurse,Healthcare; Patient Care; Medical Knowledge,Post-graduation,4-8 LPA,High,Staff Nurse > Senior Nurse > Nurse Manager,Nursing Fundamentals; Medical Courses
+STEM,Research Scientist,Research; Data Analysis; Scientific Writing,PhD,8-18 LPA,Medium,Research Assistant > Scientist > Senior Scientist,Nature Courses; Research Methods
+Arts,UI/UX Designer,Design Thinking; Figma; User Research,Graduation,5-12 LPA,High,Junior Designer > Designer > Senior Designer > Lead,Figma Academy; Google UX Design
+Engineering,Civil Engineer,Construction; AutoCAD; Project Management,Graduation,5-10 LPA,Medium,Junior Engineer > Engineer > Project Manager,Civil Engineering Courses; PMP Certification
+Business,Sales Manager,Sales; Communication; CRM,Graduation,6-15 LPA,High,Sales Executive > Manager > Regional Manager,Salesforce Training; Sales Methodology
+IT,Data Analyst,SQL; Excel; Python; Tableau,Graduation,4-8 LPA,High,Analyst > Senior Analyst > Data Scientist,Tableau Training; SQL Courses; Python for Data
+Design,Product Designer,Design; Prototyping; User Testing,Graduation,6-14 LPA,High,Junior Designer > Designer > Senior Designer > Design Lead,Adobe XD; Sketch; InVision
+Consulting,Management Consultant,Strategy; Analysis; Presentation,Post-graduation,12-25 LPA,High,Analyst > Consultant > Senior Consultant > Manager,McKinsey Insights; BCG Training
+Service,Customer Service Manager,Communication; Problem Solving; Leadership,Graduation,4-8 LPA,Medium,Representative > Supervisor > Manager,Customer Service Training; Leadership Skills
+Research,Academic Researcher,Research; Writing; Analysis,PhD,6-15 LPA,Medium,PhD > Post-doc > Assistant Professor > Professor,Academic Writing; Research Methods
+Sales,Sales Executive,Sales; Negotiation; Product Knowledge,12th,3-8 LPA,High,Executive > Senior Executive > Manager,Sales Training; Product Knowledge
+STEM,Biotechnology Researcher,Biology; Lab Skills; Research,Post-graduation,6-12 LPA,Medium,Research Assistant > Researcher > Senior Researcher,Biotechnology Courses; Lab Techniques
+Business,Financial Analyst,Finance; Excel; Financial Modeling,Graduation,6-12 LPA,High,Analyst > Senior Analyst > Manager,CFA; Financial Modeling; Bloomberg
+Healthcare,Pharmacist,Pharmacy; Medicine; Patient Care,Post-graduation,6-12 LPA,Medium,Staff Pharmacist > Senior Pharmacist > Manager,Pharmaceutical Sciences; Drug Information
+IT,Cybersecurity Analyst,Security; Networking; Risk Assessment,Graduation,8-16 LPA,High,Analyst > Senior Analyst > Security Manager,CISSP; Ethical Hacking; Security+
+Arts,Content Writer,Writing; SEO; Content Strategy,Graduation,3-7 LPA,Medium,Writer > Senior Writer > Content Manager,Content Marketing; SEO Training; Writing Skills
+Engineering,Electrical Engineer,Electronics; Circuit Design; Programming,Graduation,6-12 LPA,Medium,Junior Engineer > Engineer > Senior Engineer,Circuit Design; MATLAB; Electronics
+Business,Human Resources Manager,HR; Recruitment; Employee Relations,Graduation,6-12 LPA,Medium,HR Executive > Manager > Senior Manager,HR Certification; Recruitment Training
+IT,Mobile App Developer,Mobile Development; Java/Swift; UI Design,Graduation,6-14 LPA,High,Junior Dev > Developer > Senior Dev > Lead,Android Development; iOS Development
+Design,Fashion Designer,Fashion; Creativity; Textile Knowledge,Graduation,4-10 LPA,Medium,Assistant Designer > Designer > Senior Designer,Fashion Design Courses; Textile Studies
+Consulting,IT Consultant,Technology; Business Analysis; Communication,Post-graduation,10-20 LPA,High,Analyst > Consultant > Senior Consultant,Technology Certifications; Business Analysis
+Service,Hotel Manager,Hospitality; Management; Customer Service,Graduation,5-12 LPA,Medium,Assistant Manager > Manager > General Manager,Hotel Management; Hospitality Training
+Research,Market Research Analyst,Research; Statistics; Survey Design,Graduation,4-8 LPA,Medium,Analyst > Senior Analyst > Research Manager,Market Research Methods; SPSS; Survey Design
+Sales,Insurance Agent,Sales; Insurance Knowledge; Customer Relations,12th,3-8 LPA,Medium,Agent > Senior Agent > Manager,Insurance Training; Sales Skills
+STEM,Environmental Scientist,Environmental Science; Research; Analysis,Post-graduation,5-10 LPA,Medium,Scientist > Senior Scientist > Program Manager,Environmental Studies; GIS; Research Methods
+Business,Operations Manager,Operations; Process Improvement; Leadership,Graduation,8-15 LPA,High,Executive > Manager > Senior Manager,Operations Management; Six Sigma; Lean
+Healthcare,Physical Therapist,Therapy; Anatomy; Patient Care,Post-graduation,6-12 LPA,High,Therapist > Senior Therapist > Clinic Manager,Physical Therapy; Anatomy; Rehabilitation
+IT,Database Administrator,SQL; Database Management; System Administration,Graduation,6-12 LPA,Medium,Junior DBA > DBA > Senior DBA,Oracle; MySQL; Database Design
+Arts,Video Editor,Video Editing; Creativity; Software Skills,Graduation,4-8 LPA,Medium,Assistant Editor > Editor > Senior Editor,Adobe Premiere; Final Cut Pro; After Effects
+Engineering,Software Engineer,Programming; Algorithms; System Design,Graduation,8-16 LPA,High,Junior Engineer > Engineer > Senior Engineer,Programming Languages; System Design; Algorithms
+Business,Project Manager,Project Management; Leadership; Communication,Graduation,8-16 LPA,High,Coordinator > Manager > Senior Manager,PMP Certification; Agile; Scrum
+IT,Network Administrator,Networking; System Administration; Security,Graduation,5-10 LPA,Medium,Technician > Administrator > Senior Administrator,CCNA; Network+; System Administration
+Design,Interior Designer,Design; Space Planning; Software Skills,Graduation,4-10 LPA,Medium,Junior Designer > Designer > Senior Designer,AutoCAD; 3ds Max; Interior Design
+Consulting,Financial Consultant,Finance; Advisory; Client Relations,Post-graduation,8-18 LPA,High,Analyst > Consultant > Senior Consultant,CFA; Financial Planning; Investment Analysis
+Service,Event Manager,Event Planning; Coordination; Vendor Management,Graduation,4-10 LPA,Medium,Coordinator > Manager > Senior Manager,Event Management; Project Coordination
+Research,Clinical Research Associate,Research; Medical Knowledge; Data Analysis,Post-graduation,6-12 LPA,High,CRA > Senior CRA > Clinical Research Manager,Clinical Research; GCP; Medical Terminology
+Sales,Real Estate Agent,Sales; Property Knowledge; Negotiation,12th,4-12 LPA,Medium,Agent > Senior Agent > Broker,Real Estate License; Property Laws; Sales Training
+STEM,Chemical Engineer,Chemistry; Process Design; Safety,Graduation,6-14 LPA,Medium,Junior Engineer > Engineer > Senior Engineer,Chemical Engineering; Process Design; Safety
+Business,Brand Manager,Marketing; Brand Strategy; Analytics,Graduation,8-16 LPA,High,Executive > Manager > Senior Manager,Brand Management; Marketing Strategy; Analytics
+Healthcare,Medical Technologist,Medical Testing; Lab Skills; Quality Control,Post-graduation,5-10 LPA,Medium,Technologist > Senior Technologist > Lab Manager,Medical Laboratory; Quality Control; Testing Procedures
+IT,System Administrator,System Administration; Troubleshooting; Security,Graduation,5-12 LPA,Medium,Junior Admin > Administrator > Senior Administrator,Windows/Linux Administration; Networking; Security
+Arts,Photographer,Photography; Creativity; Equipment Knowledge,12th,3-8 LPA,Medium,Assistant > Photographer > Senior Photographer,Photography Techniques; Equipment; Photo Editing
+Engineering,Aerospace Engineer,Aerospace; CAD; Mathematics,Graduation,8-16 LPA,Medium,Junior Engineer > Engineer > Senior Engineer,Aerospace Engineering; MATLAB; CAD Software
+Business,Supply Chain Manager,Supply Chain; Logistics; Analytics,Graduation,8-15 LPA,High,Analyst > Manager > Senior Manager,Supply Chain Management; Logistics; ERP Systems
+IT,Quality Assurance Tester,Testing; Attention to Detail; Software Knowledge,Graduation,4-8 LPA,Medium,Tester > Senior Tester > QA Manager,Software Testing; Automation Testing; Bug Tracking
+Design,Game Designer,Game Design; Creativity; Programming,Graduation,6-14 LPA,High,Junior Designer > Designer > Senior Designer,Game Development; Unity; Programming
+Consulting,Strategy Consultant,Strategy; Analysis; Presentation,Post-graduation,15-30 LPA,High,Analyst > Consultant > Principal,Strategic Thinking; Case Studies; Business Analysis
+Service,Social Worker,Social Work; Counseling; Community Service,Post-graduation,3-6 LPA,Medium,Worker > Senior Worker > Program Coordinator,Social Work; Counseling; Community Development
+Research,Data Research Analyst,Research; Statistics; Data Mining,Graduation,5-10 LPA,High,Analyst > Senior Analyst > Research Manager,Statistical Analysis; R/Python; Data Mining
+Sales,Digital Marketing Specialist,Digital Marketing; SEO; Social Media,Graduation,4-10 LPA,High,Specialist > Senior Specialist > Manager,Google Ads; Facebook Marketing; SEO/SEM
+STEM,Statistician,Statistics; Mathematics; Data Analysis,Post-graduation,6-12 LPA,Medium,Analyst > Statistician > Senior Statistician,Statistical Software; Mathematics; Data Analysis
+Business,Business Development Manager,Business Development; Sales; Strategy,Graduation,8-18 LPA,High,Executive > Manager > Senior Manager,Business Development; Sales Strategy; Market Analysis
+Healthcare,Dental Hygienist,Dental Care; Patient Interaction; Health Education,Post-graduation,4-8 LPA,Medium,Hygienist > Senior Hygienist > Practice Manager,Dental Hygiene; Patient Care; Health Education
+IT,DevOps Engineer,DevOps; Cloud; Automation,Graduation,8-18 LPA,High,Engineer > Senior Engineer > DevOps Lead,AWS/Azure; Docker; Kubernetes; CI/CD
+Arts,Art Director,Art Direction; Creativity; Leadership,Graduation,8-16 LPA,Medium,Designer > Senior Designer > Art Director,Art Direction; Creative Leadership; Design Software
+Engineering,Industrial Engineer,Industrial Engineering; Process Optimization; Analysis,Graduation,6-12 LPA,Medium,Junior Engineer > Engineer > Senior Engineer,Industrial Engineering; Lean Manufacturing; Process Improvement
+Business,Investment Banker,Finance; Analysis; Client Relations,Post-graduation,12-25 LPA,High,Analyst > Associate > Vice President,Investment Banking; Financial Modeling; Valuation
+IT,Cloud Architect,Cloud Computing; Architecture; Security,Post-graduation,12-25 LPA,High,Engineer > Senior Engineer > Architect,AWS/Azure; Cloud Architecture; Security
+Design,Web Designer,Web Design; HTML/CSS; User Experience,Graduation,4-10 LPA,Medium,Junior Designer > Designer > Senior Designer,HTML/CSS; JavaScript; Design Tools
+Consulting,Business Process Consultant,Process Analysis; Improvement; Change Management,Post-graduation,10-20 LPA,High,Analyst > Consultant > Senior Consultant,Process Improvement; Change Management; Business Analysis
+Service,Restaurant Manager,Restaurant Management; Customer Service; Operations,Graduation,4-10 LPA,Medium,Assistant Manager > Manager > General Manager,Restaurant Management; Food Service; Operations
+Research,UX Researcher,User Research; Psychology; Data Analysis,Post-graduation,6-14 LPA,High,Researcher > Senior Researcher > Research Manager,User Research Methods; Psychology; Data Analysis
+Sales,Account Manager,Account Management; Relationship Building; Communication,Graduation,6-14 LPA,High,Executive > Manager > Senior Manager,Account Management; CRM; Sales Strategy
+STEM,Marine Biologist,Marine Biology; Research; Data Collection,Post-graduation,4-8 LPA,Low,Researcher > Senior Researcher > Program Manager,Marine Biology; Research Methods; Data Analysis
+Business,Retail Manager,Retail Management; Customer Service; Inventory,Graduation,4-8 LPA,Medium,Assistant Manager > Manager > Regional Manager,Retail Management; Customer Service; Inventory Management
+Healthcare,Occupational Therapist,Therapy; Patient Care; Rehabilitation,Post-graduation,6-12 LPA,High,Therapist > Senior Therapist > Department Head,Occupational Therapy; Rehabilitation; Patient Care
+IT,Technical Writer,Technical Writing; Documentation; Software Knowledge,Graduation,5-10 LPA,Medium,Writer > Senior Writer > Documentation Manager,Technical Writing; Documentation Tools; Software Knowledge
+Arts,Music Producer,Music Production; Creativity; Audio Engineering,Graduation,4-12 LPA,Medium,Assistant Producer > Producer > Executive Producer,Music Production; Audio Engineering; Music Software
+Engineering,Environmental Engineer,Environmental Engineering; Sustainability; Analysis,Graduation,6-12 LPA,Medium,Junior Engineer > Engineer > Senior Engineer,Environmental Engineering; Sustainability; Environmental Impact
+Business,Logistics Coordinator,Logistics; Coordination; Supply Chain,Graduation,4-8 LPA,Medium,Coordinator > Manager > Senior Manager,Logistics; Supply Chain; Transportation Management
+IT,Information Security Analyst,Cybersecurity; Risk Assessment; Compliance,Graduation,8-16 LPA,High,Analyst > Senior Analyst > Security Manager,Cybersecurity; Risk Management; Compliance
+Design,Packaging Designer,Package Design; Creativity; Materials Knowledge,Graduation,4-8 LPA,Medium,Junior Designer > Designer > Senior Designer,Package Design; Materials; Design Software
+Consulting,HR Consultant,Human Resources; Consulting; Organizational Development,Post-graduation,8-16 LPA,High,Consultant > Senior Consultant > Principal,HR Consulting; Organizational Development; Change Management
+Service,Fitness Trainer,Fitness; Health; Motivation,12th,2-6 LPA,Medium,Trainer > Senior Trainer > Fitness Manager,Fitness Training; Health Education; Nutrition
+Research,Policy Analyst,Policy Analysis; Research; Government Affairs,Post-graduation,5-12 LPA,Medium,Analyst > Senior Analyst > Policy Manager,Policy Analysis; Government Affairs; Research Methods
+Sales,Pharmaceutical Sales Representative,Sales; Medical Knowledge; Relationship Building,Graduation,6-12 LPA,Medium,Representative > Senior Representative > Regional Manager,Pharmaceutical Knowledge; Medical Sales; Relationship Building
+STEM,Geologist,Geology; Field Work; Data Analysis,Post-graduation,5-10 LPA,Medium,Geologist > Senior Geologist > Project Manager,Geology; Field Research; GIS; Data Analysis
+Business,E-commerce Manager,E-commerce; Digital Marketing; Analytics,Graduation,6-14 LPA,High,Executive > Manager > Senior Manager,E-commerce Platforms; Digital Marketing; Web Analytics
+Healthcare,Radiologic Technologist,Medical Imaging; Patient Care; Equipment Operation,Post-graduation,5-10 LPA,Medium,Technologist > Senior Technologist > Department Supervisor,Medical Imaging; Radiology; Patient Care
+IT,Business Intelligence Analyst,Business Intelligence; Data Analysis; Reporting,Graduation,6-12 LPA,High,Analyst > Senior Analyst > BI Manager,Business Intelligence; SQL; Data Visualization
+Arts,Copywriter,Writing; Marketing; Creativity,Graduation,4-10 LPA,Medium,Junior Copywriter > Copywriter > Senior Copywriter,Copywriting; Marketing; Creative Writing
+Engineering,Biomedical Engineer,Biomedical Engineering; Medical Devices; Problem Solving,Graduation,6-14 LPA,Medium,Junior Engineer > Engineer > Senior Engineer,Biomedical Engineering; Medical Devices; Regulatory Affairs
+Business,Category Manager,Category Management; Retail; Analytics,Graduation,8-15 LPA,High,Analyst > Manager > Senior Manager,Category Management; Retail Analytics; Market Research
+IT,Software Architect,Software Architecture; Design Patterns; Leadership,Post-graduation,15-30 LPA,High,Senior Developer > Architect > Principal Architect,Software Architecture; Design Patterns; System Design
+Design,Motion Graphics Designer,Motion Graphics; Animation; Creativity,Graduation,5-12 LPA,Medium,Junior Designer > Designer > Senior Designer,After Effects; Motion Graphics; Animation
+Consulting,Technology Consultant,Technology; Business Process; Implementation,Post-graduation,12-22 LPA,High,Consultant > Senior Consultant > Principal,Technology Solutions; Business Process; Project Management
+Service,Travel Agent,Travel Planning; Customer Service; Geography,12th,3-6 LPA,Medium,Agent > Senior Agent > Agency Manager,Travel Industry; Geography; Customer Service
+Research,Survey Researcher,Survey Design; Statistics; Data Collection,Graduation,4-8 LPA,Medium,Researcher > Senior Researcher > Research Director,Survey Methods; Statistics; Data Collection
+Sales,Sales Trainer,Sales Training; Communication; Curriculum Development,Graduation,6-12 LPA,Medium,Trainer > Senior Trainer > Training Manager,Sales Training; Adult Learning; Curriculum Development
+STEM,Forensic Scientist,Forensic Science; Lab Analysis; Criminal Justice,Post-graduation,5-10 LPA,Medium,Scientist > Senior Scientist > Lab Director,Forensic Science; Laboratory Techniques; Criminal Justice
+Education,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+Media,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+Law,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+Finance,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+Marketing,N/A,N/A,N/A,N/A,N/A,N/A,N/A

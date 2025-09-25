@@ -1181,11 +1181,11 @@ export const assessmentQuestions = {
   }
 };
 
-// Helper function to get questions by education level and test type
+// Helper functions
 export const getQuestionsByEducationLevel = (educationLevel, testType) => {
   const levelMap = {
     'intermediate-10th': 'Foundation',
-    'intermediate-11th': 'Foundation',
+    'intermediate-11th': 'Foundation', 
     'intermediate-12th': 'Foundation',
     'diploma': 'Intermediate',
     'bachelors': 'Intermediate',
@@ -1193,39 +1193,37 @@ export const getQuestionsByEducationLevel = (educationLevel, testType) => {
     'phd': 'Advanced'
   };
   
-  const mappedLevel = levelMap[educationLevel] || 'Foundation';
+  const mappedLevel = levelMap[educationLevel] || 'Intermediate';
   return assessmentQuestions[mappedLevel]?.[testType] || [];
 };
 
-// Get all test types for a specific education level
 export const getTestTypes = (educationLevel) => {
   const levelMap = {
     'intermediate-10th': 'Foundation',
     'intermediate-11th': 'Foundation',
-    'intermediate-12th': 'Foundation',
+    'intermediate-12th': 'Foundation', 
     'diploma': 'Intermediate',
     'bachelors': 'Intermediate',
     'masters': 'Advanced',
     'phd': 'Advanced'
   };
   
-  const mappedLevel = levelMap[educationLevel] || 'Foundation';
+  const mappedLevel = levelMap[educationLevel] || 'Intermediate';
   return Object.keys(assessmentQuestions[mappedLevel] || {});
 };
 
-// Get question level name
 export const getQuestionLevel = (educationLevel) => {
   const levelMap = {
     'intermediate-10th': 'Foundation',
     'intermediate-11th': 'Foundation',
     'intermediate-12th': 'Foundation',
-    'diploma': 'Intermediate',
+    'diploma': 'Intermediate', 
     'bachelors': 'Intermediate',
     'masters': 'Advanced',
     'phd': 'Advanced'
   };
   
-  return levelMap[educationLevel] || 'Foundation';
+  return levelMap[educationLevel] || 'Intermediate';
 };
 
 export default assessmentQuestions;
