@@ -16,6 +16,19 @@ const AssessmentOverview = () => {
   const [showResults, setShowResults] = useState(false);
   const [showCareerMatches, setShowCareerMatches] = useState(false);
 
+  // ✅ FIX: Add assessment progress persistence
+  const [completedTests, setCompletedTests] = useState(() => {
+    try {
+      const saved = localStorage.getItem('assessmentProgress');
+      const parsed = saved ? JSON.parse(saved) : { completedTests: [] };
+      return parsed.completedTests || [];
+    } catch (error) {
+      console.error('Error loading assessment progress:', error);
+      return [];
+    }
+  });
+
+
   const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
   useEffect(() => {
@@ -54,10 +67,26 @@ const AssessmentOverview = () => {
     setActiveTest(testType);
   };
 
-  const handleTestComplete = () => {
+  const handleTestComplete = (testType) => {
     setActiveTest(null);
+    
+    // ✅ FIX: Mark test as completed and persist
+    const updatedCompleted = completedTests.includes(testType) 
+      ? completedTests 
+      : [...completedTests, testType];
+    
+    setCompletedTests(updatedCompleted);
+    
+    // Save to localStorage
+    const progressData = {
+      completedTests: updatedCompleted,
+      lastUpdated: new Date().toISOString()
+    };
+    localStorage.setItem('assessmentProgress', JSON.stringify(progressData));
+    
     loadAssessmentTypes(); // Refresh to show completed status
   };
+
 
   const handleCloseTest = () => {
     setActiveTest(null);
@@ -75,6 +104,14 @@ const AssessmentOverview = () => {
     setShowResults(false);
     setShowCareerMatches(false);
   };
+
+  // ✅ FIX: Add retake functionality
+  const handleRetakeAssessment = () => {
+    setCompletedTests([]);
+    localStorage.removeItem('assessmentProgress');
+    loadAssessmentTypes();
+  };
+
 
   if (loading) {
     return (
@@ -149,7 +186,16 @@ const AssessmentOverview = () => {
         >
           🎯 Get Career Matches
         </button>
+        {/* ✅ FIX: Add retake button */}
+        <button 
+          className="action-btn retake-btn"
+          onClick={handleRetakeAssessment}
+          disabled={completedCount === 0}
+        >
+          🔄 Retake All Tests
+        </button>
       </div>
+
 
       <div className="assessment-grid">
         {assessmentTypes.map((assessment) => (
@@ -179,10 +225,11 @@ const AssessmentOverview = () => {
         <TestModal
           testType={activeTest}
           testData={testMetadata[activeTest]}
-          onComplete={handleTestComplete}
+          onComplete={() => handleTestComplete(activeTest)}
           onClose={handleCloseTest}
         />
       )}
+
     </div>
   );
 };

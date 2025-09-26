@@ -4,7 +4,10 @@ import './TestResults.css';
 
 const TestResults = ({ testResults, isEmbedded, onRetake }) => {
   console.log('🖥️ TestResults component received:', testResults);
-  console.log('🖥️ TestResults type:', typeof testResults);
+  console.log('🖥️ TestResults.testResults:', testResults?.testResults);
+  console.log('🖥️ TestResults.testResults.cognitive:', testResults?.testResults?.cognitive);
+  console.log('🖥️ TestResults.testResults.skills:', testResults?.testResults?.skills);
+  console.log('🖥️ TestResults.overallScores:', testResults?.overallScores);
   console.log('🖥️ TestResults exists:', !!testResults);
 
   if (!testResults) {
@@ -38,46 +41,52 @@ const TestResults = ({ testResults, isEmbedded, onRetake }) => {
     let percentage = 0;
     
     console.log(`📊 Calculating scores for ${testType}:`, data);
+    console.log(`📊 Available data keys:`, Object.keys(data));
+    console.log(`📊 Data values:`, JSON.stringify(data, null, 2));
     
     // Strategy 1: Direct correct/score values
-    if (data.correct !== undefined && data.correct > 0) {
+    if (data.correct !== undefined && data.correct >= 0) {
+      console.log(`✅ Using Strategy 1 - Direct correct: ${data.correct}`);
       correctAnswers = data.correct;
       percentage = Math.round((correctAnswers / totalQuestions) * 100);
-    } else if (data.score !== undefined && data.score > 0) {
+    } else if (data.score !== undefined && data.score >= 0) {
+      console.log(`✅ Using Strategy 1 - Direct score: ${data.score}`);
       correctAnswers = data.score;
       percentage = Math.round((correctAnswers / totalQuestions) * 100);
     } 
     // Strategy 2: Use percentage if available
-    else if (data.percentage !== undefined && data.percentage > 0) {
+    else if (data.percentage !== undefined && data.percentage >= 0) {
+      console.log(`✅ Using Strategy 2 - Percentage: ${data.percentage}`);
       percentage = data.percentage;
       correctAnswers = Math.round((percentage / 100) * totalQuestions);
     }
-    // Strategy 3: Use overall scores as fallback (0-1 scale)
+    // Strategy 3: Use total field
+    else if (data.total !== undefined && data.total > 0) {
+      console.log(`✅ Using Strategy 3 - Total questions: ${data.total}`);
+      correctAnswers = data.correct || 0;
+      percentage = Math.round((correctAnswers / data.total) * 100);
+    }
+    // Strategy 4: Use overall scores as fallback (0-1 scale)
     else if (testResults.overallScores && testResults.overallScores[testType.toLowerCase()]) {
       const overallScore = testResults.overallScores[testType.toLowerCase()];
-      if (overallScore > 0) {
+      console.log(`✅ Using Strategy 4 - Overall score: ${overallScore}`);
+      if (overallScore >= 0) {
         percentage = Math.round(overallScore * 100);
         correctAnswers = Math.round(overallScore * totalQuestions);
       }
     }
-    // Strategy 4: Realistic fallback scores (better than 0)
+    // Strategy 5: REMOVE FALLBACK - Show real zeros!
     else {
-      // Provide realistic scores instead of 0
-      const fallbackScores = {
-        cognitive: { percentage: 65, correct: Math.round(0.65 * totalQuestions) },
-        skills: { percentage: 70, correct: Math.round(0.70 * totalQuestions) },
-        situational: { percentage: 75, correct: Math.round(0.75 * totalQuestions) },
-        values: { percentage: 80, correct: Math.round(0.80 * totalQuestions) }
-      };
-      
-      const fallback = fallbackScores[testType.toLowerCase()] || { percentage: 60, correct: Math.round(0.60 * totalQuestions) };
-      percentage = fallback.percentage;
-      correctAnswers = fallback.correct;
+      console.log(`❌ NO DATA FOUND - Using ZERO scores for ${testType}`);
+      console.log(`❌ This means the backend is not sending proper data!`);
+      percentage = 0;
+      correctAnswers = 0;
     }
     
     console.log(`📊 ${testType} final scores:`, { correctAnswers, percentage, totalQuestions });
     return { correctAnswers, percentage, totalQuestions };
   };
+
 
   // Calculate scores for each test
   const cognitiveScores = calculateRealScores(testData.cognitive || {}, 'cognitive', 15);

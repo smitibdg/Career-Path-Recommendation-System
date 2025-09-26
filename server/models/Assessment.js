@@ -70,8 +70,9 @@ const AssessmentSchema = new mongoose.Schema({
     personalityDominantTrait: { 
         type: String, 
         default: 'balanced',
-        enum: ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism', 'balanced']
+        enum: ['Openness', 'Conscientiousness', 'Extraversion', 'Agreeableness', 'Neuroticism', 'balanced']
     },
+
     personalityDescription: { 
         type: String, 
         default: 'Shows balanced traits across different personality dimensions',
@@ -155,15 +156,16 @@ AssessmentSchema.methods.getFullPersonalityData = function() {
         },
         // Internal data (for debugging/admin)
         internal: {
-            openness: this.personalityO,
-            conscientiousness: this.personalityC,
-            extraversion: this.personalityE,
-            agreeableness: this.personalityA,
-            neuroticism: this.personalityN,
+            Openness: this.personalityO,
+            Conscientiousness: this.personalityC,
+            Extraversion: this.personalityE,
+            Agreeableness: this.personalityA,
+            Neuroticism: this.personalityN,
             rawScores: this.personalityRawScores
         }
     };
 };
+
 
 // Method to check if assessment is complete
 AssessmentSchema.methods.isComplete = function() {
@@ -203,27 +205,28 @@ AssessmentSchema.pre('save', function(next) {
             );
             
             const personalityTypes = {
-                openness: {
+                Openness: {
                     type: 'Creative Explorer',
                     description: 'Imaginative, open to new experiences, and intellectually curious'
                 },
-                conscientiousness: {
+                Conscientiousness: {
                     type: 'Organized Achiever', 
                     description: 'Disciplined, reliable, and goal-oriented with strong work ethic'
                 },
-                extraversion: {
+                Extraversion: {
                     type: 'Social Connector',
                     description: 'Outgoing, energetic, and thrives in social interactions'
                 },
-                agreeableness: {
+                Agreeableness: {
                     type: 'Collaborative Partner',
                     description: 'Cooperative, trustful, and values harmony in relationships'
                 },
-                neuroticism: {
+                Neuroticism: {
                     type: 'Analytical Thinker',
                     description: 'Detail-oriented, cautious, and thoughtful in decision-making'
                 }
             };
+
 
             const result = personalityTypes[dominantTrait] || {
                 type: 'Balanced Individual',

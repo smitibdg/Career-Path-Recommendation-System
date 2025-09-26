@@ -3,98 +3,100 @@ const router = express.Router();
 const { spawn } = require('child_process');
 const path = require('path');
 const User = require('../models/User');
+const TestResponse = require('../models/TestResponse');
+const Assessment = require('../models/Assessment');
+
 
 // Enhanced Model 1 function that calls Python script
 const runModel1Enhanced = (responses, educationLevel, username) => {
-    return new Promise((resolve, reject) => {
-        console.log('🚀 Starting Model 1 Enhanced Processing...');
-        console.log('📊 Input:', { responses: responses.length, educationLevel, username });
-
-        // Path to Python script
-        const scriptPath = path.join(__dirname, '../ml_models/model1/model1_scoring_engine.py');
-        console.log('📍 Python script path:', scriptPath);
-
-        // Prepare input data for Python
-        const inputData = JSON.stringify({
-            responses: responses,
-            education_level: educationLevel,
-            username: username
-        });
-
-        console.log('📤 Sending to Python:', inputData.substring(0, 200) + '...');
-
-        // Spawn Python process
-        const pythonProcess = spawn('python', [scriptPath], {
-            stdio: ['pipe', 'pipe', 'pipe'],
-            env: { ...process.env, PYTHONPATH: path.join(__dirname, '../ml_models') }
-        });
-
-        let outputData = '';
-        let errorData = '';
-
-        // Handle Python stdout
-        pythonProcess.stdout.on('data', (data) => {
-            const output = data.toString();
-            console.log('🐍 Python output:', output);
-            outputData += output;
-        });
-
-        // Handle Python stderr
-        pythonProcess.stderr.on('data', (data) => {
-            const error = data.toString();
-            console.log('🐍 Python error:', error);
-            errorData += error;
-        });
-
-        // Send input to Python
-        pythonProcess.stdin.write(inputData);
-        pythonProcess.stdin.end();
-
-        // Handle process completion
-        pythonProcess.on('close', (code) => {
-            console.log('🐍 Python process completed with code:', code);
-
-            if (code !== 0) {
-                console.error('❌ Python process failed:', errorData);
-                return reject(new Error(`Python process failed: ${errorData}`));
-            }
-
-            try {
-                // Parse the last JSON output from Python
-                const lines = outputData.trim().split('\n');
-                const jsonLine = lines[lines.length - 1];
-                
-                console.log('📥 Python final output:', jsonLine);
-
-                if (!jsonLine || jsonLine.trim() === '') {
-                    throw new Error('No output from Python script');
-                }
-
-                const result = JSON.parse(jsonLine);
-                console.log('✅ Successfully parsed Python result');
-                console.log('📊 Result keys:', Object.keys(result));
-
-                resolve(result);
-            } catch (parseError) {
-                console.error('❌ Error parsing Python output:', parseError);
-                console.error('❌ Raw output:', outputData);
-                reject(new Error(`Failed to parse Python output: ${parseError.message}`));
-            }
-        });
-
-        // Handle process errors
-        pythonProcess.on('error', (error) => {
-            console.error('❌ Failed to start Python process:', error);
-            reject(new Error(`Failed to start Python process: ${error.message}`));
-        });
-
-        // Timeout after 60 seconds
-        setTimeout(() => {
-            pythonProcess.kill();
-            reject(new Error('Python process timed out after 60 seconds'));
-        }, 60000);
+  return new Promise((resolve, reject) => {
+    const pythonScript = path.join(__dirname, '../ml_models/model1/model1_scoring_engine.py');
+    console.log('🚀 Starting Model 1 Enhanced Processing...');
+    console.log('📊 Input:', {
+      responses: responses.length,
+      educationLevel,
+      username
     });
+    console.log('📍 Python script path:', pythonScript);
+
+    const inputData = {
+      responses: responses,
+      education_level: educationLevel,
+      username: username
+    };
+
+    const jsonInput = JSON.stringify(inputData);
+    console.log('📤 Sending to Python:', jsonInput.substring(0, 200) + '...');
+
+    const pythonProcess = spawn('python', [pythonScript]);
+    
+    let outputData = '';
+    let errorData = '';
+
+    pythonProcess.stdout.on('data', (data) => {
+      outputData += data.toString();
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+      errorData += data.toString();
+      console.log('🐍 Python error:', data.toString());
+    });
+
+    pythonProcess.on('close', (code) => {
+      console.log('🐍 Python process completed with code:', code);
+      
+      if (code !== 0) {
+        console.log('❌ Python process failed');
+        return reject(new Error(`Python process failed with code ${code}: ${errorData}`));
+      }
+
+      // ✅ FIX: Clean the output data properly
+      const cleanOutput = outputData.trim();
+      console.log('📥 Raw Python output length:', cleanOutput.length);
+      
+      if (!cleanOutput) {
+        return reject(new Error('No output from Python script'));
+      }
+
+      try {
+        // ✅ FIX: Find the JSON part by looking for the first {
+        const firstBrace = cleanOutput.indexOf('{');
+        const lastBrace = cleanOutput.lastIndexOf('}');
+        
+        if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
+          console.log('❌ No valid JSON structure found');
+          console.log('Raw output:', cleanOutput);
+          return reject(new Error('No valid JSON structure in Python output'));
+        }
+
+        // Extract only the JSON part
+        const jsonPart = cleanOutput.substring(firstBrace, lastBrace + 1);
+        console.log('📥 Extracted JSON length:', jsonPart.length);
+        
+        // Parse the extracted JSON
+        const result = JSON.parse(jsonPart);
+        
+        console.log('✅ Model 1 Enhanced completed successfully');
+        resolve(result);
+        
+      } catch (parseError) {
+        console.log('❌ Error parsing Python output:', parseError.message);
+        console.log('❌ Raw output:', cleanOutput);
+        reject(new Error(`Failed to parse Python output: ${parseError.message}`));
+      }
+    });
+
+    pythonProcess.on('error', (error) => {
+      console.log('❌ Python process error:', error.message);
+      reject(new Error(`Python process failed: ${error.message}`));
+    });
+
+    // Send input to Python
+    pythonProcess.stdin.write(jsonInput);
+    pythonProcess.stdin.end();
+  });
 };
+
 
 // Main ML Prediction Route
 router.post('/predict', async (req, res) => {
@@ -141,6 +143,9 @@ router.post('/predict', async (req, res) => {
             console.log('🔄 Processing assessment submission with REAL Model 1...');
             console.log('📊 Received responses:', testResponses.length);
             
+            // 🔍 ADD THIS EXACT LINE HERE:
+            console.log("🔍 ALL RESPONSES FROM FRONTEND:", JSON.stringify(testResponses.slice(0, 10), null, 2));
+
             // Get user details
             const user = await User.findById(userId);
             if (!user) {
@@ -152,6 +157,50 @@ router.post('/predict', async (req, res) => {
 
             console.log('✅ User found:', user.name);
             console.log('📚 User education:', user.educationLevel);
+            
+            // ✅ FIX: Save test responses to MongoDB FIRST before processing
+            let testResponseDoc = await TestResponse.findOne({ 
+                userId: user._id, 
+                isActive: true 
+            });
+
+            if (!testResponseDoc) {
+                testResponseDoc = new TestResponse({
+                    userId: user._id,
+                    username: user.name, // ✅ FIX: Use user.name as username
+                        educationLevel: user.educationLevel || 'intermediate',
+                        responses: [],
+                        isActive: true,
+                    isScored: false
+                });
+            }
+
+            // Add new responses (avoid duplicates by questionId)
+            testResponses.forEach(response => {
+                const existingIndex = testResponseDoc.responses.findIndex(
+                    r => r.questionId === response.questionId
+                );
+                
+                if (existingIndex >= 0) {
+                    // Update existing response
+                    testResponseDoc.responses[existingIndex] = {
+                        questionId: response.questionId,
+                        answer: response.answer,
+                        testType: response.testType
+                    };
+                } else {
+                    // Add new response
+                    testResponseDoc.responses.push({
+                        questionId: response.questionId,
+                        answer: response.answer,
+                        testType: response.testType
+                    });
+                }
+            });
+
+            await testResponseDoc.save();
+            console.log('✅ Test responses saved to MongoDB:', testResponseDoc._id);
+            console.log('Total responses saved:', testResponseDoc.responses.length);
 
             // Map education level
             const educationMapping = {
@@ -163,23 +212,89 @@ router.post('/predict', async (req, res) => {
             
             const mappedEducationLevel = educationMapping[user.educationLevel?.toLowerCase()] || 'Intermediate';
 
-            // Format responses for Python Model 1
-            const formattedResponses = testResponses.map(response => ({
-                Question_ID: response.questionId,
-                Answer: response.answer
-            }));
+            // Format responses for Python Model 1 using ALL saved responses
+            const formattedResponses = testResponseDoc.responses.map(response => {
+                let answerValue;
+                
+                // ✅ FIX: Convert numeric answers to proper format based on question type
+                if (response.questionId.includes('P')) {
+                    // Personality questions: keep numeric (1-5)
+                    answerValue = String(response.answer);
+                } else {
+                    // Skills/Cognitive/Situational/Values: convert number to letter
+                    const optionMap = { 1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E' };
+                    answerValue = optionMap[response.answer] || 'A';
+                }
+                
+                return {
+                    Question_ID: response.questionId,
+                    Answer: answerValue
+                };
+            });
+
+            // 🔍 ADD THIS DEBUG LINE RIGHT HERE:
+            console.log('📋 Formatted responses by type:', {
+                personality: formattedResponses.filter(r => r.Question_ID.includes('P')).length,
+                skills: formattedResponses.filter(r => r.Question_ID.includes('S')).length,
+                cognitive: formattedResponses.filter(r => r.Question_ID.includes('C')).length,
+                situational: formattedResponses.filter(r => r.Question_ID.includes('T')).length,
+                values: formattedResponses.filter(r => r.Question_ID.includes('V')).length
+            });
 
             console.log('📋 Formatted responses sample:', formattedResponses.slice(0, 3));
 
             try {
                 console.log('🧮 Calling Python Model 1...');
                 
-                // Call the real Python Model 1
+                // Call the real Python Model 1 with ALL saved responses
                 const model1Result = await runModel1Enhanced(formattedResponses, mappedEducationLevel, user.name);
                 
                 console.log('✅ Model 1 completed successfully');
 
-                // Build final results using REAL calculated scores from Python
+                // ✅ ADD: Debug what Python actually returned
+                console.log('🐍 Python model1Result keys:', Object.keys(model1Result));
+                console.log('🐍 cognitive_score:', model1Result.cognitive_score);
+                console.log('🐍 skills_score:', model1Result.skills_score);
+                console.log('🐍 detailed_scores:', JSON.stringify(model1Result.detailed_scores, null, 2));
+                console.log('🐍 detailed_scores.cognitive:', model1Result.detailed_scores?.cognitive);
+                console.log('🐍 detailed_scores.skills:', model1Result.detailed_scores?.skills);
+
+                
+                // ✅ FIX: Always create NEW assessment or update existing with LATEST results
+                let assessment = await Assessment.findOne({ 
+                userId: user._id, 
+                isActive: true 
+                });
+
+                if (!assessment) {
+                assessment = new Assessment({
+                    userId: user._id,
+                    testResponseId: testResponseDoc._id,
+                    educationLevel: mappedEducationLevel
+                });
+                } else {
+                // ✅ CRITICAL: Update existing assessment with new test response
+                assessment.testResponseId = testResponseDoc._id;
+                assessment.completedAt = new Date();
+                }
+
+                // ✅ FIX: Update assessment with results from the working Python model
+                assessment.cognitiveScore = Math.round((model1Result.cognitive_score || 0) * 100);
+                assessment.skillsScore = Math.round((model1Result.skills_score || 0) * 100);
+                assessment.situationalScore = Math.round((model1Result.situational_score || 0) * 100);
+                assessment.valuesScore = Math.round((model1Result.values_score || 0) * 100);
+                assessment.personalityType = model1Result.personality_type || 'Balanced Individual';
+                assessment.personalityScore = model1Result.personality_score || 50;
+                assessment.personalityDominantTrait = model1Result.personality_dominant_trait || 'balanced';
+                assessment.personalityDescription = model1Result.personality_description || 'Shows balanced traits';
+                
+                // ✅ FIX: Store detailed scores for frontend
+                assessment.testScores = model1Result.detailed_scores || {};
+
+                await assessment.save();
+                console.log('✅ Assessment results saved to MongoDB:', assessment._id);
+
+                // ✅ FIX: Build final results using REAL calculated scores from Python
                 const detailedResults = {
                     user: {
                         name: user.name,
@@ -194,53 +309,57 @@ router.post('/predict', async (req, res) => {
                     },
                     testResults: {
                         cognitive: {
-                            correct: model1Result.detailed_scores.cognitive.correct,
-                            total: model1Result.detailed_scores.cognitive.total,
-                            percentage: model1Result.detailed_scores.cognitive.percentage
+                        correct: model1Result.detailed_scores?.cognitive?.correct || 0,
+                        total: model1Result.detailed_scores?.cognitive?.total || 15,
+                        percentage: model1Result.detailed_scores?.cognitive?.percentage || 0
                         },
                         skills: {
-                            correct: model1Result.detailed_scores.skills.correct,
-                            total: model1Result.detailed_scores.skills.total,
-                            percentage: model1Result.detailed_scores.skills.percentage
+                        correct: model1Result.detailed_scores?.skills?.correct || 0,
+                        total: model1Result.detailed_scores?.skills?.total || 19,
+                        percentage: model1Result.detailed_scores?.skills?.percentage || 0
                         },
                         situational: {
-                            score: model1Result.detailed_scores.situational.correct,
-                            total: model1Result.detailed_scores.situational.total,
-                            percentage: model1Result.detailed_scores.situational.percentage
+                        correct: model1Result.detailed_scores?.situational?.correct || 0,
+                        total: model1Result.detailed_scores?.situational?.total || 11,
+                        percentage: model1Result.detailed_scores?.situational?.percentage || 0
                         },
                         values: {
-                            score: model1Result.detailed_scores.values.correct,
-                            total: model1Result.detailed_scores.values.total,
-                            percentage: model1Result.detailed_scores.values.percentage
+                        correct: model1Result.detailed_scores?.values?.correct || 0,
+                        total: model1Result.detailed_scores?.values?.total || 11,
+                        percentage: model1Result.detailed_scores?.values?.percentage || 0
                         }
                     },
                     overallScores: {
-                        cognitive: model1Result.cognitive_score,
-                        skills: model1Result.skills_score,
-                        situational: model1Result.situational_score,
-                        values: model1Result.values_score,
-                        personality: model1Result.personality_score / 100
+                        cognitive: model1Result.cognitive_score || 0,
+                        skills: model1Result.skills_score || 0,
+                        situational: model1Result.situational_score || 0,
+                        values: model1Result.values_score || 0,
+                        personality: (model1Result.personality_score || 50) / 100
+                    },
+                    processedResponses: model1Result.processed_responses || 0,
+                    
+                    // ✅ ADD: Debug info to see what Python actually returned
+                    debugPythonOutput: {
+                        raw_cognitive_score: model1Result.cognitive_score,
+                        raw_skills_score: model1Result.skills_score,
+                        raw_detailed_scores: model1Result.detailed_scores
                     }
                 };
 
-                console.log('📋 Final results structure built');
-                console.log('🎯 Test Results Summary:');
-                console.log(`   Cognitive: ${detailedResults.testResults.cognitive.correct}/${detailedResults.testResults.cognitive.total}`);
-                console.log(`   Skills: ${detailedResults.testResults.skills.correct}/${detailedResults.testResults.skills.total}`);
-                console.log(`   Situational: ${detailedResults.testResults.situational.score}/${detailedResults.testResults.situational.total}`);
-                console.log(`   Values: ${detailedResults.testResults.values.score}/${detailedResults.testResults.values.total}`);
 
+                console.log('Final results structure built');
+                
                 return res.status(200).json({
                     success: true,
                     message: 'Assessment processed successfully with REAL Model 1',
                     data: {
-                        detailedResults: detailedResults,
-                        user: detailedResults.user
+                    detailedResults: detailedResults,
+                    user: detailedResults.user
                     }
                 });
 
-            } catch (pythonError) {
-                console.error('❌ Python Model 1 failed:', pythonError.message);
+                } catch (pythonError) {
+                console.error('Python Model 1 failed:', pythonError.message);
                 
                 // Return error response
                 return res.status(500).json({

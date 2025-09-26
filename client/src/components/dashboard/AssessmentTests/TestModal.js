@@ -37,15 +37,30 @@ const TestModal = ({ testType, testData, onComplete, onClose }) => {
   }, [timeRemaining]);
 
   const handleAnswerSelect = (questionId, selectedOption) => {
+    const currentQ = questions[currentQuestion];
+    
+    // 🎯 FIX: Send the correct answer format based on question type
+    let answerValue;
+    
+    // For personality questions (FP, IP, AP), send Likert scale numbers
+    if (questionId.includes('P')) {
+      answerValue = String(selectedOption + 1); // Convert 0,1,2,3,4 to "1","2","3","4","5"
+    } else {
+      // For Skills/Cognitive/Situational/Values, send option letters
+      const optionMap = ['A', 'B', 'C', 'D', 'E'];
+      answerValue = optionMap[selectedOption]; // Convert 0,1,2,3,4 to A,B,C,D,E
+    }
+    
     setAnswers({
       ...answers,
       [questionId]: {
         questionId,
         selectedOption,
-        selectedAnswer: questions[currentQuestion].options[selectedOption]
+        selectedAnswer: answerValue // ✅ NOW CORRECT!
       }
     });
   };
+
 
   const handleNext = () => {
     if (currentQuestion < questions.length - 1) {
@@ -142,8 +157,8 @@ const TestModal = ({ testType, testData, onComplete, onClose }) => {
   }
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="modal-overlay" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         {/* Modal Header */}
         <div className="modal-header">
           <div className="test-info">

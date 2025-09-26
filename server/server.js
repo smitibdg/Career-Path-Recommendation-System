@@ -368,6 +368,96 @@ app.use((req, res, next) => {
   }
 });
 
+
+// ✅ FIX: Assessment types endpoint to fix HTTP 500 error
+app.get('/api/assessments/types', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({
+        success: false,
+        message: 'No token provided'
+      });
+    }
+
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const user = await User.findById(decoded.userId);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // ✅ Get user's completed tests from TestResponse
+    const testResponse = await TestResponse.findOne({ 
+      userId: user._id, 
+      isActive: true 
+    });
+
+    const completedTestTypes = testResponse ? 
+      [...new Set(testResponse.responses.map(r => r.testType))] : [];
+
+    const assessmentTypes = [
+      {
+        id: 'personality',
+        title: 'Personality Assessment',
+        icon: '🧠',
+        duration: '12-18 mins',
+        questions: 19,
+        completed: completedTestTypes.includes('personality')
+      },
+      {
+        id: 'skills',
+        title: 'Skills Evaluation', 
+        icon: '💪',
+        duration: '15-20 mins',
+        questions: 19,
+        completed: completedTestTypes.includes('skills')
+      },
+      {
+        id: 'cognitive',
+        title: 'Cognitive Assessment',
+        icon: '🎯',
+        duration: '10-15 mins', 
+        questions: 15,
+        completed: completedTestTypes.includes('cognitive')
+      },
+      {
+        id: 'values',
+        title: 'Values Assessment',
+        icon: '💎',
+        duration: '7-12 mins',
+        questions: 11,
+        completed: completedTestTypes.includes('values')
+      },
+      {
+        id: 'situational',
+        title: 'Situational Judgment',
+        icon: '🤔',
+        duration: '8-15 mins',
+        questions: 11,
+        completed: completedTestTypes.includes('situational')
+      }
+    ];
+
+    res.json({
+      success: true,
+      assessmentTypes
+    });
+
+  } catch (error) {
+    console.error('Error loading assessment types:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error loading assessment types'
+    });
+  }
+});
+
+
 // ✅ Start Server
 app.listen(5000, () => {
   console.log(`🚀 Server running on port ${5000}`);
