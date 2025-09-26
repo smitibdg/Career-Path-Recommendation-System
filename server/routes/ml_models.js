@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 const { spawn } = require('child_process');
@@ -5,7 +6,6 @@ const path = require('path');
 const User = require('../models/User');
 const TestResponse = require('../models/TestResponse');
 const Assessment = require('../models/Assessment');
-
 
 // Enhanced Model 1 function that calls Python script
 const runModel1Enhanced = (responses, educationLevel, username) => {
@@ -416,5 +416,113 @@ router.get('/test', (req, res) => {
         timestamp: new Date().toISOString()
     });
 });
+
+// ✅ ADD THIS ROUTE
+// ✅ REPLACE the entire /check-assessment-status route (lines ~406-435) with this:
+router.post('/check-assessment-status', async (req, res) => {
+  console.log('🔍 Check assessment status route hit');
+  console.log('📋 Request body:', req.body);
+  
+  try {
+    const { userId } = req.body;
+    console.log('👤 Extracted userId:', userId);
+    
+    if (!userId) {
+      console.log('❌ No userId provided');
+      return res.status(400).json({ error: 'User ID required' });
+    }
+
+    const objectId = new mongoose.Types.ObjectId(userId);
+
+    // Find the most recent assessment
+    const assessmentResult = await Assessment.findOne({ 
+      userId: objectId
+    }).sort({ createdAt: -1 });
+    
+    console.log('📊 Found assessment result:', !!assessmentResult);
+    
+    if (assessmentResult) {
+      console.log('📊 Found assessment result:', !!assessmentResult);
+      // 🔍 ADD THESE NEW DEBUG LINES:
+      console.log('🔍 Assessment testScores keys:', Object.keys(assessmentResult.testScores || {}));
+      console.log('🔍 Assessment data structure:', JSON.stringify(assessmentResult, null, 2));
+  
+      // 🎯 CRITICAL: Build the EXACT format your frontend expects
+      const detailedResults = {
+        user: {
+          name: assessmentResult.username || 'User',
+          educationLevel: assessmentResult.educationLevel || 'Intermediate'
+        },
+        completedAt: assessmentResult.completedAt || assessmentResult.createdAt,
+        personalityProfile: {
+          type: assessmentResult.personalityType || 'Balanced Individual',
+          score: assessmentResult.personalityScore || 50,
+          dominantTrait: assessmentResult.personalityDominantTrait || 'balanced',
+          description: assessmentResult.personalityDescription || 'Shows balanced traits'
+        },
+
+        detailed_scores: {
+        // 🎯 ADD: Missing personality data
+        personality: assessmentResult.testScores?.personality || {
+            score: assessmentResult.personalityScore || 50,
+            total: 100,
+            percentage: assessmentResult.personalityScore || 50,
+            type: assessmentResult.personalityType || 'Social Connector',
+            dominantTrait: assessmentResult.personalityDominantTrait || 'balanced'
+        },
+        cognitive: assessmentResult.testScores?.cognitive || {
+            correct: Math.round((assessmentResult.cognitiveScore || 0) * 0.15 / 100),
+            total: 15,
+            percentage: assessmentResult.cognitiveScore || 0
+        },
+        skills: assessmentResult.testScores?.skills || {
+            correct: Math.round((assessmentResult.skillsScore || 0) * 0.19 / 100), 
+            total: 19,
+            percentage: assessmentResult.skillsScore || 0
+        },
+        situational: assessmentResult.testScores?.situational || {
+            correct: Math.round((assessmentResult.situationalScore || 0) * 0.11 / 100),
+            total: 11, 
+            percentage: assessmentResult.situationalScore || 0
+        },
+        values: assessmentResult.testScores?.values || {
+            correct: Math.round((assessmentResult.valuesScore || 0) * 0.11 / 100),
+            total: 11,
+            percentage: assessmentResult.valuesScore || 0
+        }
+        },
+        
+        overallScores: {
+          cognitive: (assessmentResult.cognitiveScore || 0) / 100,
+          skills: (assessmentResult.skillsScore || 0) / 100,
+          situational: (assessmentResult.situationalScore || 0) / 100,
+          values: (assessmentResult.valuesScore || 0) / 100
+        }
+      };
+
+      console.log('✅ Sending results with detailed_scores:', Object.keys(detailedResults.detailed_scores));
+      
+      return res.json({
+        success: true,
+        hasResults: true,        // ← Frontend checks this
+        results: detailedResults // ← Frontend uses this
+      });
+    } else {
+      console.log('📊 No assessment found');
+      return res.json({
+        success: true,
+        hasResults: false,
+        results: null
+      });
+    }
+  } catch (error) {
+    console.error('❌ Error checking assessment status:', error);
+    return res.status(500).json({ 
+      success: false,
+      error: 'Server error' 
+    });
+  }
+});
+
 
 module.exports = router;

@@ -454,7 +454,7 @@ export const UserProvider = ({ children }) => {
 
   // ✅ NEW: Check if profile exists (considering loading state)
   const hasProfile = () => {
-    return !!(state.profile && state.profileLoaded);
+    return !!(state.profile && state.profile.educationLevel);
   };
 
   const contextValue = {

@@ -49,15 +49,15 @@ const TestCards = () => {
 
         console.log('🔍 Checking for existing results for user:', userId);
 
-        const response = await fetch('/api/ml/predict', {
+        // ✅ FIXED: Use the correct endpoint
+        const response = await fetch('/api/ml/check-assessment-status', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
           body: JSON.stringify({
-            userId: userId,
-            action: 'results'
+            userId: userId
           })
         });
 
@@ -67,20 +67,23 @@ const TestCards = () => {
           const data = await response.json();
           console.log('📊 Response data:', JSON.stringify(data, null, 2));
           
-          let existingResults = null;
-          if (data.success && data.data && data.data.detailedResults) {
-            existingResults = data.data.detailedResults;
-          } else if (data.success && data.data && data.data.user) {
-            existingResults = data.data;
-          } else if (data.success && data.detailedResults) {
-            existingResults = data.detailedResults;
-          }
-
-          if (existingResults) {
+          // ✅ FIXED: Handle new response format
+          if (data.hasResults && data.results) {
             console.log('✅ Found existing results, showing them');
-            setTestResults(existingResults);
+            setTestResults(data.results);
             setShowResults(true);
-            setCompletedTests(new Set(['Personality', 'Skills', 'Cognitive', 'Situational', 'Values']));
+            
+            // 🎯 CRITICAL: Set completed tests based on actual test data
+            const completedTestNames = new Set();
+            if (data.results.detailed_scores) {
+              Object.keys(data.results.detailed_scores).forEach(testName => {
+                // Convert to proper case for matching (cognitive -> Cognitive)
+                const testNameFormatted = testName.charAt(0).toUpperCase() + testName.slice(1);
+                completedTestNames.add(testNameFormatted);
+              });
+            }
+            console.log('🔧 Setting completed tests:', completedTestNames);
+            setCompletedTests(completedTestNames);
           } else {
             console.log('ℹ️ No existing results found');
             // Reset state if no results found
@@ -88,6 +91,7 @@ const TestCards = () => {
             setShowResults(false);
             setCompletedTests(new Set());
           }
+
         } else if (response.status === 404) {
           console.log('ℹ️ No results found (404), showing fresh tests');
           // Reset state for fresh start
@@ -104,10 +108,11 @@ const TestCards = () => {
       }
     };
 
+
     if (hasProfile && currentEducationLevel) {
       checkExistingResults();
     }
-  }, [hasProfile, currentEducationLevel]); // Re-run when user profile changes
+  }, [hasProfile, currentEducationLevel, profileLoaded]); // Re-run when user profile changes
 
   // 🎯 NEW: Submit final assessment when all 5 tests are completed
   useEffect(() => {
@@ -191,8 +196,32 @@ const TestCards = () => {
   const userEducationLevel = currentEducationLevel || profile?.educationLevel || 'bachelors';
   const questionLevel = getQuestionLevel(userEducationLevel);
 
-  // Better profile checking
+  // ✅ FIXED: Declare showProfileWarning FIRST, then debug
   const showProfileWarning = profileLoaded && (!hasProfile() || !hasEducationLevel());
+
+  // Add debug logging AFTER declaration
+  console.log('🔍 Profile Debug Info:');
+  console.log('📊 profileLoaded:', profileLoaded);
+  console.log('📊 hasProfile():', hasProfile());
+  console.log('📊 hasEducationLevel():', hasEducationLevel());
+  console.log('📊 profile:', profile);
+  console.log('📊 currentEducationLevel:', currentEducationLevel);
+  console.log('📊 showProfileWarning:', showProfileWarning);
+
+  // 🚧 TEMPORARY: Profile check commented out for testing
+  /*
+  if (showProfileWarning) {
+    return (
+      <div className="test-cards-container">
+        <div className="section-header">
+          <h2>Complete Your Profile</h2>
+          <p>Please complete your profile and education details to access personalized assessment tests</p>
+        </div>
+      </div>
+    );
+  }
+  */
+
 
   const tests = [
     {
@@ -258,17 +287,6 @@ const TestCards = () => {
   ];
 
   const allTestsCompleted = completedTests.size === 5;
-
-  if (showProfileWarning) {
-    return (
-      <div className="test-cards-container">
-        <div className="section-header">
-          <h2>Complete Your Profile</h2>
-          <p>Please complete your profile and education details to access personalized assessment tests</p>
-        </div>
-      </div>
-    );
-  }
 
   const handleStartTest = (testId) => {
     setActiveTest(testId);
@@ -476,7 +494,7 @@ const CompleteTestModal = ({ testType, testData, questions, onClose, onComplete 
   // Safety checks
   if (!questions || !Array.isArray(questions) || questions.length === 0) {
     return (
-      <div className="test-modal modal-overlay" onClick={onClose}>
+      <div className="test-modal modal-overlay">
         <div className="modal-content" onClick={e => e.stopPropagation()}>
           <div className="modal-header">
             <h3>⚠️ No questions available</h3>
@@ -498,7 +516,7 @@ const CompleteTestModal = ({ testType, testData, questions, onClose, onComplete 
 
   if (!currentQ || !currentQ.options || !Array.isArray(currentQ.options)) {
     return (
-      <div className="test-modal modal-overlay" onClick={onClose}>
+      <div className="test-modal modal-overlay">
         <div className="modal-content" onClick={e => e.stopPropagation()}>
           <div className="modal-header">
             <h3>⚠️ Question data error</h3>
@@ -575,7 +593,7 @@ const CompleteTestModal = ({ testType, testData, questions, onClose, onComplete 
   const allAnswered = answeredCount >= Math.ceil(questions.length * 0.4);
 
   return (
-    <div className="test-modal modal-overlay" onClick={onClose}>
+    <div className="test-modal modal-overlay">
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         {/* Modal Header */}
         <div className="modal-header">

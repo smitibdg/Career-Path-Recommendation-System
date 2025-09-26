@@ -33,54 +33,49 @@ const TestResults = ({ testResults, isEmbedded, onRetake }) => {
   const dominantTrait = personalityProfile.dominantTrait || 'balanced';
   
   // Extract test results with fallback values
-  const testData = testResults.testResults || {};
+  // 🎯 FIXED: Extract test results from the correct path
+  const testData = testResults.detailed_scores || testResults.testResults || {};
+  console.log('🖥️ Using testData from detailed_scores:', testData);
+
   
   // 🎯 Calculate REAL scores with multiple fallback strategies
-  const calculateRealScores = (data, testType, totalQuestions) => {
+  const calculateRealScores = (data, testType) => {
     let correctAnswers = 0;
     let percentage = 0;
+    let totalQuestions = 0;
     
     console.log(`📊 Calculating scores for ${testType}:`, data);
-    console.log(`📊 Available data keys:`, Object.keys(data));
-    console.log(`📊 Data values:`, JSON.stringify(data, null, 2));
     
-    // Strategy 1: Direct correct/score values
-    if (data.correct !== undefined && data.correct >= 0) {
-      console.log(`✅ Using Strategy 1 - Direct correct: ${data.correct}`);
+    // Strategy 1: Use backend detailed_scores data (correct + total + percentage)
+    if (data.correct !== undefined && data.total !== undefined) {
+      console.log(`✅ Using backend detailed_scores - correct: ${data.correct}, total: ${data.total}`);
       correctAnswers = data.correct;
-      percentage = Math.round((correctAnswers / totalQuestions) * 100);
-    } else if (data.score !== undefined && data.score >= 0) {
-      console.log(`✅ Using Strategy 1 - Direct score: ${data.score}`);
-      correctAnswers = data.score;
-      percentage = Math.round((correctAnswers / totalQuestions) * 100);
+      totalQuestions = data.total; // ← Use backend's total (attempted questions)
+      percentage = data.percentage || Math.round((correctAnswers / totalQuestions) * 100);
     } 
-    // Strategy 2: Use percentage if available
+    // Strategy 2: Use percentage if available but no totals
     else if (data.percentage !== undefined && data.percentage >= 0) {
-      console.log(`✅ Using Strategy 2 - Percentage: ${data.percentage}`);
+      console.log(`✅ Using percentage: ${data.percentage}`);
       percentage = data.percentage;
-      correctAnswers = Math.round((percentage / 100) * totalQuestions);
+      correctAnswers = 0; // Can't calculate without total
+      totalQuestions = 0;
     }
-    // Strategy 3: Use total field
-    else if (data.total !== undefined && data.total > 0) {
-      console.log(`✅ Using Strategy 3 - Total questions: ${data.total}`);
-      correctAnswers = data.correct || 0;
-      percentage = Math.round((correctAnswers / data.total) * 100);
-    }
-    // Strategy 4: Use overall scores as fallback (0-1 scale)
+    // Strategy 3: Use overall scores as fallback (0-1 scale)
     else if (testResults.overallScores && testResults.overallScores[testType.toLowerCase()]) {
       const overallScore = testResults.overallScores[testType.toLowerCase()];
-      console.log(`✅ Using Strategy 4 - Overall score: ${overallScore}`);
+      console.log(`✅ Using overall score: ${overallScore}`);
       if (overallScore >= 0) {
         percentage = Math.round(overallScore * 100);
-        correctAnswers = Math.round(overallScore * totalQuestions);
+        correctAnswers = 0;
+        totalQuestions = 0;
       }
     }
-    // Strategy 5: REMOVE FALLBACK - Show real zeros!
+    // Strategy 4: No data found
     else {
       console.log(`❌ NO DATA FOUND - Using ZERO scores for ${testType}`);
-      console.log(`❌ This means the backend is not sending proper data!`);
       percentage = 0;
       correctAnswers = 0;
+      totalQuestions = 0;
     }
     
     console.log(`📊 ${testType} final scores:`, { correctAnswers, percentage, totalQuestions });
@@ -88,12 +83,13 @@ const TestResults = ({ testResults, isEmbedded, onRetake }) => {
   };
 
 
-  // Calculate scores for each test
-  // ✅ CORRECT: Use dynamic totals from backend data
-  const cognitiveScores = calculateRealScores(testData.cognitive || {}, 'cognitive', testData.cognitive?.total || 30);
-  const skillsScores = calculateRealScores(testData.skills || {}, 'skills', testData.skills?.total || 38);
-  const situationalScores = calculateRealScores(testData.situational || {}, 'situational', testData.situational?.total || 21);
-  const valuesScores = calculateRealScores(testData.values || {}, 'values', testData.values?.total || 22);
+
+  // ✅ BEST: Let the function use backend totals automatically
+  const cognitiveScores = calculateRealScores(testData.cognitive || {}, 'cognitive');
+  const skillsScores = calculateRealScores(testData.skills || {}, 'skills'); 
+  const situationalScores = calculateRealScores(testData.situational || {}, 'situational');
+  const valuesScores = calculateRealScores(testData.values || {}, 'values');
+
 
 
   // Format completion date

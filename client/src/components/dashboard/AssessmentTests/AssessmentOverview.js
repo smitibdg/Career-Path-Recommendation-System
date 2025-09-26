@@ -28,12 +28,100 @@ const AssessmentOverview = () => {
     }
   });
 
+  // ✅ ADD THIS NEW STATE RIGHT AFTER the completedTests useState:
+  const [assessmentState, setAssessmentState] = useState({
+    isCompleted: false,
+    hasResults: false,
+    completedTests: [],
+    results: null
+  })
 
-  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api'
+
+  // ✅ ADD THESE FUNCTIONS RIGHT HERE, BEFORE loadAssessmentTypes:
+  const checkUserAssessmentStatus = async () => {
+    console.log('🔍 Checking user assessment status...'); // Debug
+    try {
+      const userId = localStorage.getItem('userId');
+      console.log('👤 UserId from localStorage:', userId); // Debug
+      
+      if (!userId) {
+        console.log('❌ No userId found in localStorage');
+        return;
+      }
+
+      console.log('🌐 Making API call to:', `${API_BASE_URL}/ml/check-assessment-status`); // Debug
+      
+      const response = await fetch(`${API_BASE_URL}/ml/check-assessment-status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      });
+      
+      console.log('📡 Response status:', response.status); // Debug
+      
+      const data = await response.json();
+      console.log('📊 Response data:', data); // Debug
+      
+      if (data.hasResults) {
+        setAssessmentState({
+          isCompleted: true,
+          hasResults: true,
+          completedTests: data.completedTests,
+          results: data.results
+        });
+        
+        localStorage.setItem('assessmentState', JSON.stringify({
+          isCompleted: true,
+          hasResults: true,
+          completedTests: data.completedTests,
+          results: data.results
+        }));
+        
+        setShowResults(true);
+      }
+    } catch (error) {
+      console.error('❌ Error checking assessment status:', error);
+    }
+  };
+
+
+  const handleRetakeAssessment = () => {
+    setAssessmentState({
+      isCompleted: false,
+      hasResults: false,
+      completedTests: [],
+      results: null
+    })
+    
+    localStorage.removeItem('assessmentState')
+    setShowResults(false)
+    loadAssessmentTypes()
+  }
+
+  const handleAssessmentComplete = (results) => {
+    const newState = {
+      isCompleted: true,
+      hasResults: true,
+      completedTests: ['personality', 'cognitive', 'skills', 'situational', 'values'],
+      results: results
+    }
+    
+    setAssessmentState(newState)
+    localStorage.setItem('assessmentState', JSON.stringify(newState))
+    setShowResults(true)
+  }
+
 
   useEffect(() => {
     loadAssessmentTypes();
   }, []);
+
+    // ✅ ADD THIS NEW useEffect RIGHT AFTER the existing one:
+  useEffect(() => {
+    checkUserAssessmentStatus()
+  }, [])
 
   const loadAssessmentTypes = async () => {
     try {
@@ -103,13 +191,6 @@ const AssessmentOverview = () => {
   const handleBackToOverview = () => {
     setShowResults(false);
     setShowCareerMatches(false);
-  };
-
-  // ✅ FIX: Add retake functionality
-  const handleRetakeAssessment = () => {
-    setCompletedTests([]);
-    localStorage.removeItem('assessmentProgress');
-    loadAssessmentTypes();
   };
 
 

@@ -144,7 +144,7 @@ const TestModal = ({ testType, testData, onComplete, onClose }) => {
 
   if (!currentQ) {
     return (
-      <div className="modal-overlay">
+      <div className="modal-overlay" onClick={(e) => e.stopPropagation()}>
         <div className="modal-content">
           <div className="error-message">
             <h3>⚠️ No questions available</h3>
