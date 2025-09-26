@@ -175,28 +175,18 @@ router.post('/predict', async (req, res) => {
                 });
             }
 
-            // Add new responses (avoid duplicates by questionId)
+            // ✅ CLEAR OLD RESPONSES and use ONLY current submission
+            testResponseDoc.responses = [];  // Clear old data
+
+            // Add ONLY current attempt responses
             testResponses.forEach(response => {
-                const existingIndex = testResponseDoc.responses.findIndex(
-                    r => r.questionId === response.questionId
-                );
-                
-                if (existingIndex >= 0) {
-                    // Update existing response
-                    testResponseDoc.responses[existingIndex] = {
-                        questionId: response.questionId,
-                        answer: response.answer,
-                        testType: response.testType
-                    };
-                } else {
-                    // Add new response
-                    testResponseDoc.responses.push({
-                        questionId: response.questionId,
-                        answer: response.answer,
-                        testType: response.testType
-                    });
-                }
+                testResponseDoc.responses.push({
+                    questionId: response.questionId,
+                    answer: response.answer,
+                    testType: response.testType
+                });
             });
+
 
             await testResponseDoc.save();
             console.log('✅ Test responses saved to MongoDB:', testResponseDoc._id);

@@ -89,10 +89,12 @@ const TestResults = ({ testResults, isEmbedded, onRetake }) => {
 
 
   // Calculate scores for each test
-  const cognitiveScores = calculateRealScores(testData.cognitive || {}, 'cognitive', 15);
-  const skillsScores = calculateRealScores(testData.skills || {}, 'skills', 19);
-  const situationalScores = calculateRealScores(testData.situational || {}, 'situational', 11);
-  const valuesScores = calculateRealScores(testData.values || {}, 'values', 11);
+  // ✅ CORRECT: Use dynamic totals from backend data
+  const cognitiveScores = calculateRealScores(testData.cognitive || {}, 'cognitive', testData.cognitive?.total || 30);
+  const skillsScores = calculateRealScores(testData.skills || {}, 'skills', testData.skills?.total || 38);
+  const situationalScores = calculateRealScores(testData.situational || {}, 'situational', testData.situational?.total || 21);
+  const valuesScores = calculateRealScores(testData.values || {}, 'values', testData.values?.total || 22);
+
 
   // Format completion date
   const formatDate = (dateString) => {

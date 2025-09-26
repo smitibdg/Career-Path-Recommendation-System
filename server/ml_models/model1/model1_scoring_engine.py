@@ -378,33 +378,42 @@ class Model1ScoringEngine:
         is_correct = answer == correct_answer
         
         if question_type == 'Cognitive':
-            self.detailed_scores['cognitive']['total'] += 1
+            # ✅ DON'T INCREMENT TOTAL HERE - handled in process_responses
             if is_correct:
                 self.cognitive_score += weight
                 self.detailed_scores['cognitive']['correct'] += 1
                 
         elif question_type == 'Skills':
-            self.detailed_scores['skills']['total'] += 1
+            # ✅ DON'T INCREMENT TOTAL HERE - handled in process_responses
             if is_correct:
                 self.skills_score += weight
                 self.detailed_scores['skills']['correct'] += 1
 
-    def calculate_situational_values_score(self, question_id: str, answer: str, question_info: dict) -> None:
-        """Calculate situational and values scores using predefined mapping"""
+
+
+    def calculate_situational_values_score(self, question_id, answer, question_info):
+        """Calculate scores for situational and values questions"""
         question_type = question_info['type']
-        scoring_map = question_info.get('scoring_map', {})
-        
-        score = scoring_map.get(answer, 0)
         
         if question_type == 'Situational':
-            self.situational_score += score
-            self.detailed_scores['situational']['total'] += 1
-            self.detailed_scores['situational']['correct'] += score
-            
+            # ✅ DON'T INCREMENT TOTAL HERE - handled in process_responses
+            if 'scoring_map' in question_info:
+                score_map = question_info['scoring_map']
+                if answer in score_map:
+                    # Consider scores >= 4 as "correct" for display purposes
+                    if score_map[answer] >= 4:
+                        self.detailed_scores['situational']['correct'] += 1 
+                        
         elif question_type == 'Values':
-            self.values_score += score  
-            self.detailed_scores['values']['total'] += 1
-            self.detailed_scores['values']['correct'] += score
+            # ✅ DON'T INCREMENT TOTAL HERE - handled in process_responses
+            if 'scoring_map' in question_info:
+                score_map = question_info['scoring_map']
+                if answer in score_map:
+                    # Consider scores >= 4 as "correct" for display purposes
+                    if score_map[answer] >= 4:
+                        self.detailed_scores['values']['correct'] += 1
+
+
 
     def determine_personality_type(self) -> tuple:
         """Determine dominant personality type and traits"""
@@ -446,9 +455,13 @@ class Model1ScoringEngine:
         try:
             # Load question database
             questions_db = self.load_questions_database(education_level)
-
             processed_count = 0
-            # Process each response
+            
+            # ✅ Initialize counters for ACTUAL user attempts
+            user_attempts = {'Cognitive': 0, 'Skills': 0, 'Situational': 0, 'Values': 0}
+            user_correct = {'Cognitive': 0, 'Skills': 0, 'Situational': 0, 'Values': 0}
+            
+            # ✅ Process each response and count ONLY what user actually attempted
             for response in responses:
                 question_id = response.get('Question_ID', '').strip()
                 answer = str(response.get('Answer', '')).strip()
@@ -456,34 +469,63 @@ class Model1ScoringEngine:
                 if not question_id or not answer:
                     continue
                 
-                # Normalize question ID (remove underscores if present)
+                # Normalize question ID
                 normalized_id = self.normalize_question_id(question_id)
+                question_info = questions_db.get(normalized_id) or questions_db.get(question_id)
                 
-                
-                question_info = questions_db.get(normalized_id)
                 if not question_info:
-                    # Try original ID if normalization fails
-                    question_info = questions_db.get(question_id)
-                    if not question_info:
-                        continue
+                    continue
                 
                 processed_count += 1
+                question_type = question_info['type']
                 
-                # Route to appropriate scoring function
-                if question_info['type'] == 'Personality':
+                # ✅ Count this as an attempt
+                if question_type in user_attempts:
+                    user_attempts[question_type] += 1
+                
+                # ✅ Score the question and count if correct
+                if question_type == 'Personality':
                     self.calculate_personality_score(question_id, answer, question_info)
-                elif question_info['type'] in ['Cognitive', 'Skills']:
-                    self.calculate_cognitive_skills_score(question_id, answer, question_info)
-                elif question_info['type'] in ['Situational', 'Values']:
-                    self.calculate_situational_values_score(question_id, answer, question_info)
+                    
+                elif question_type == 'Cognitive':
+                    correct_answer = question_info.get('correct_answer', '')
+                    if answer == correct_answer:
+                        user_correct['Cognitive'] += 1
+                        
+                elif question_type == 'Skills':
+                    correct_answer = question_info.get('correct_answer', '')
+                    if answer == correct_answer:
+                        user_correct['Skills'] += 1
+                        
+                elif question_type == 'Situational':
+                    if 'scoring_map' in question_info:
+                        score_map = question_info['scoring_map']
+                        if answer in score_map and score_map[answer] >= 4:
+                            user_correct['Situational'] += 1
+                            
+                elif question_type == 'Values':
+                    if 'scoring_map' in question_info:
+                        score_map = question_info['scoring_map']
+                        if answer in score_map and score_map[answer] >= 4:
+                            user_correct['Values'] += 1
             
-            # Calculate final scores and percentages
+            # ✅ SET RESULTS TO EXACTLY WHAT USER ATTEMPTED
+            self.detailed_scores['cognitive']['correct'] = user_correct['Cognitive']
+            self.detailed_scores['cognitive']['total'] = user_attempts['Cognitive']
+            self.detailed_scores['skills']['correct'] = user_correct['Skills'] 
+            self.detailed_scores['skills']['total'] = user_attempts['Skills']
+            self.detailed_scores['situational']['correct'] = user_correct['Situational']
+            self.detailed_scores['situational']['total'] = user_attempts['Situational']
+            self.detailed_scores['values']['correct'] = user_correct['Values']
+            self.detailed_scores['values']['total'] = user_attempts['Values']
+            
+            # Calculate percentages
             self._calculate_final_percentages()
             
             # Determine personality type
             personality_type, personality_score, dominant_trait, description = self.determine_personality_type()
             
-            # ✅ FIXED: Prepare results with CORRECT SCORING CALCULATION
+            # ✅ Return results
             results = {
                 'username': username,
                 'education_level': education_level,
@@ -504,6 +546,37 @@ class Model1ScoringEngine:
         except Exception as e:
             raise e
 
+
+
+
+        
+    def calculate_final_scores(self):
+        """Calculate final percentage scores"""
+        # Calculate percentages based on correct/total
+        if self.detailed_scores['cognitive']['total'] > 0:
+            self.detailed_scores['cognitive']['percentage'] = round(
+                (self.detailed_scores['cognitive']['correct'] / self.detailed_scores['cognitive']['total']) * 100, 1
+            )
+        
+        if self.detailed_scores['skills']['total'] > 0:
+            self.detailed_scores['skills']['percentage'] = round(
+                (self.detailed_scores['skills']['correct'] / self.detailed_scores['skills']['total']) * 100, 1
+            )
+        
+        # ✅ FIX: Proper percentage calculation for situational
+        if self.detailed_scores['situational']['total'] > 0:
+            self.detailed_scores['situational']['percentage'] = round(
+                (self.detailed_scores['situational']['correct'] / self.detailed_scores['situational']['total']) * 100, 1
+            )
+        
+        # ✅ CORRECT: This will show 100%
+        if self.detailed_scores['values']['total'] > 0:
+            percentage = (self.detailed_scores['values']['correct'] / self.detailed_scores['values']['total']) * 100
+            self.detailed_scores['values']['percentage'] = round(percentage, 1)
+            print(f"🔍 Values calc: {self.detailed_scores['values']['correct']}/{self.detailed_scores['values']['total']} = {percentage}%")
+
+
+
     def _calculate_final_percentages(self):
         """Calculate percentage scores for display"""
         # Cognitive percentage
@@ -520,16 +593,15 @@ class Model1ScoringEngine:
 
         # Situational percentage
         if self.detailed_scores['situational']['total'] > 0:
-            max_situational = self.detailed_scores['situational']['total'] * 5
             self.detailed_scores['situational']['percentage'] = round(
-                (self.detailed_scores['situational']['correct'] / max_situational) * 100, 1
+                (self.detailed_scores['situational']['correct'] / self.detailed_scores['situational']['total']) * 100, 1
             )
         
         # Values percentage
         if self.detailed_scores['values']['total'] > 0:
             max_values = self.detailed_scores['values']['total'] * 5
             self.detailed_scores['values']['percentage'] = round(
-                (self.detailed_scores['values']['correct'] / max_values) * 100, 1
+                (self.detailed_scores['values']['correct'] / self.detailed_scores['values']['total']) * 100, 1
             )
 
 def main():
