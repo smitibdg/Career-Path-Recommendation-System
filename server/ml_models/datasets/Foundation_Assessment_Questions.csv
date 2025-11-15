@@ -1,0 +1,76 @@
+Question_ID,Test_Type,Education_Level,Question_Text,Option_A,Option_B,Option_C,Option_D,Option_E,Correct_Answer,Category,Weight,Trait_Measured
+FP001,Personality,Foundation,I enjoy meeting new people and making friends at school/college,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Social,1,Extraversion
+FP002,Personality,Foundation,I prefer studying alone rather than in groups,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Social,1,Extraversion
+FP003,Personality,Foundation,I feel confident speaking in front of my classmates,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Social,1,Extraversion
+FP004,Personality,Foundation,I often volunteer to lead group projects or activities,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Leadership,1,Extraversion
+FP005,Personality,Foundation,I keep my room and study space well organized,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Organization,1,Conscientiousness
+FP006,Personality,Foundation,I complete my homework and assignments on time,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Discipline,1,Conscientiousness
+FP007,Personality,Foundation,I often forget to bring my books or stationery to school,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Organization,1,Conscientiousness
+FP008,Personality,Foundation,I enjoy learning about different cultures and places,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Cultural,1,Openness
+FP009,Personality,Foundation,I like trying new activities and hobbies,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Curiosity,1,Openness
+FP010,Personality,Foundation,I prefer familiar activities rather than trying something new,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Curiosity,1,Openness
+FP011,Personality,Foundation,I try to help classmates who are struggling with their studies,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Empathy,1,Agreeableness
+FP012,Personality,Foundation,I get along well with most of my classmates,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Cooperation,1,Agreeableness
+FP013,Personality,Foundation,I often argue with others about small things,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Conflict,1,Agreeableness
+FP014,Personality,Foundation,I worry a lot about my exam results,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Anxiety,1,Neuroticism
+FP015,Personality,Foundation,I remain calm even during stressful situations like exams,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Calm,1,Neuroticism
+FP016,Personality,Foundation,My mood changes quickly from happy to sad,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Mood,1,Neuroticism
+FP017,Personality,Foundation,I bounce back quickly from setbacks or failures,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Resilience,1,Neuroticism
+FP018,Personality,Foundation,I enjoy creative activities like art music or writing,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Creativity,1,Openness
+FP019,Personality,Foundation,I pay attention to details in my work and assignments,Strongly Disagree,Disagree,Neutral,Agree,Strongly Agree,,Precision,1,Conscientiousness
+FS001,Skills,Foundation,Which of these is used to browse the internet?,Microsoft Word,Chrome/Firefox,Calculator,Notepad,Paint,B,Digital,1,Basic Computer Skills
+FS002,Skills,Foundation,What does 'www' stand for in website addresses?,World Wide Web,Web World Wide,Wide World Web,World Web Wide,Web Wide World,A,Digital,1,Basic Computer Skills
+FS003,Skills,Foundation,Which key is used to make letters CAPITAL while typing?,Alt,Ctrl,Shift,Tab,Enter,C,Digital,1,Basic Computer Skills
+FS004,Skills,Foundation,What should you do first when starting a group project?,Start working immediately,Discuss and plan together,Divide work randomly,Wait for others,Do everything yourself,B,Teamwork,1,Collaboration
+FS005,Skills,Foundation,How do you show active listening in a conversation?,Look at your phone,Think about what to say next,Make eye contact and nod,Interrupt frequently,Stay silent always,C,Communication,1,Communication Skills
+FS006,Skills,Foundation,Which of these is the best way to manage your study time?,Study everything the night before exam,Make a study schedule and follow it,Study only your favorite subjects,Study only when you feel like it,Copy from friends,B,Planning,1,Time Management
+FS007,Skills,Foundation,What is 15% of 200?,20,25,30,35,40,C,Math,1,Basic Math
+FS008,Skills,Foundation,If you buy 3 notebooks at ₹25 each how much do you pay in total?,₹60,₹65,₹70,₹75,₹80,D,Math,1,Basic Math
+FS009,Skills,Foundation,What should you do when you don't understand something in class?,Ignore and move on,Ask the teacher for clarification,Pretend you understand,Sleep in class,Copy from classmates,B,Learning,1,Learning Skills
+FS010,Skills,Foundation,Which is the best way to remember what you study?,Read once quickly,Just listen in class,Take notes and review regularly,Memorize without understanding,Study only before exams,C,Learning,1,Learning Skills
+FS011,Skills,Foundation,What does 'email' stand for?,Electronic mail,Emergency mail,Easy mail,Extra mail,Expert mail,A,Digital,1,Basic Computer Skills
+FS012,Skills,Foundation,How do you save a document in most computer programs?,Alt + S,Ctrl + S,Shift + S,Tab + S,F1 + S,B,Digital,1,Basic Computer Skills
+FS013,Skills,Foundation,When presenting in front of class you should:,Speak very fast,Look only at your notes,Speak clearly and make eye contact,Turn your back to audience,Whisper quietly,C,Communication,1,Presentation Skills
+FS014,Skills,Foundation,What is 25% of 80?,15,20,25,30,35,B,Math,1,Basic Math
+FS015,Skills,Foundation,If a train leaves at 2:30 PM and takes 3 hours 45 minutes what time does it arrive?,6:15 PM,6:30 PM,5:45 PM,5:15 PM,6:00 PM,A,Math,1,Basic Math
+FS016,Skills,Foundation,What is the best way to resolve a conflict with a friend?,Avoid them completely,Talk calmly and listen to their side,Get angry and shout,Ignore the problem,Get others involved immediately,B,Social,1,Conflict Resolution
+FS017,Skills,Foundation,When working in a group what should you do if someone is not participating?,Do all the work yourself,Complain to the teacher immediately,Gently encourage them to participate,Exclude them from the group,Ignore them completely,C,Teamwork,1,Team Leadership
+FS018,Skills,Foundation,What should you do before starting any assignment?,Start writing immediately,Read the instructions carefully,Ask friends for their answers,Wait until the last day,Guess what's required,B,Planning,1,Task Management
+FS019,Skills,Foundation,Which of these helps you learn new things better?,Memorizing without understanding,Understanding concepts and practicing,Just reading once,Copying from others,Avoiding difficult topics,B,Learning,1,Learning Strategy
+FC001,Cognitive,Foundation,What comes next in the pattern: 2 4 6 8 ?,10,12,14,16,18,A,Logic,1,Pattern Recognition
+FC002,Cognitive,Foundation,If all cats are animals and Fluffy is a cat then Fluffy is:,A dog,An animal,A bird,A fish,A plant,B,Logic,1,Logical Reasoning
+FC003,Cognitive,Foundation,Which number is different from the others: 2 4 6 9 8?,2,4,6,9,8,D,Logic,1,Pattern Recognition
+FC004,Cognitive,Foundation,What is 12 × 8?,84,96,104,112,120,B,Math,1,Basic Arithmetic
+FC005,Cognitive,Foundation,If today is Wednesday what day will it be in 10 days?,Thursday,Friday,Saturday,Sunday,Monday,C,Logic,1,Sequential Thinking
+FC006,Cognitive,Foundation,Which word does not belong: Apple Banana Car Orange?,Apple,Banana,Car,Orange,None,C,Logic,1,Categorization
+FC007,Cognitive,Foundation,Complete the sequence: A B C D ?,E,F,G,H,I,A,Logic,1,Sequential Pattern
+FC008,Cognitive,Foundation,What is half of 150?,65,70,75,80,85,C,Math,1,Basic Arithmetic
+FC009,Cognitive,Foundation,If 5 pencils cost ₹25 how much does 1 pencil cost?,₹3,₹4,₹5,₹6,₹7,C,Math,1,Basic Division
+FC010,Cognitive,Foundation,Which shape has 3 sides?,Circle,Square,Triangle,Rectangle,Pentagon,C,Logic,1,Basic Geometry
+FC011,Cognitive,Foundation,What comes next: Monday Tuesday Wednesday ?,Thursday,Friday,Saturday,Sunday,Monday,A,Logic,1,Sequential Pattern
+FC012,Cognitive,Foundation,If you have 100 rupees and spend 35 rupees how much is left?,55,60,65,70,75,C,Math,1,Basic Subtraction
+FC013,Cognitive,Foundation,Which is the largest number: 45 54 34 43?,45,54,34,43,Same,B,Math,1,Number Comparison
+FC014,Cognitive,Foundation,Complete: Hot is to Cold as Up is to ?,Down,Left,Right,Forward,Backward,A,Logic,1,Analogical Reasoning
+FC015,Cognitive,Foundation,How many minutes are there in 2 hours?,100,110,120,130,140,C,Math,1,Time Calculation
+FT001,Situational,Foundation,Your friend asks you to let them copy your homework. What do you do?,Let them copy everything,Help them understand the concepts,Refuse and walk away,Tell the teacher immediately,Ignore them completely,B,Ethics,1,Moral Reasoning
+FT002,Situational,Foundation,You see a classmate being bullied. What is your best response?,Join the bullying,Ignore the situation,Tell an adult or teacher,Laugh at the situation,Record it on phone,C,Social,1,Social Responsibility
+FT003,Situational,Foundation,You have two important tests on the same day. How do you prepare?,Study for just one test,Panic and give up,Create a study plan for both,Ask friends for answers,Skip both tests,C,Planning,1,Problem Solving
+FT004,Situational,Foundation,Your group project partner is not doing their share of work. You:,Do all the work yourself,Complain to everyone about them,Talk to them about contributing,Remove them from the group,Give up on the project,C,Teamwork,1,Conflict Management
+FT005,Situational,Foundation,You made a mistake in class and everyone laughed. You feel:,Very embarrassed and angry,Normal - everyone makes mistakes,Like you want to hide forever,Angry at your classmates,Sad and disappointed,B,Emotional,1,Emotional Resilience
+FT006,Situational,Foundation,Your parents want you to study science but you love art. What do you do?,Immediately choose art,Follow parents' choice without question,Discuss your interests with parents,Get angry and argue,Ignore the decision,C,Decision_Making,1,Independence
+FT007,Situational,Foundation,You find someone's wallet with money in the school corridor. You:,Keep it for yourself,Take the money and return wallet,Return it to lost and found,Give it to a friend,Throw it away,C,Ethics,1,Honesty
+FT008,Situational,Foundation,During a group discussion you disagree with everyone else. You:,Stay quiet and agree,Argue loudly until they agree,Respectfully share your viewpoint,Get up and leave,Make fun of their ideas,C,Communication,1,Assertiveness
+FT009,Situational,Foundation,You have been chosen as class monitor. Your first action is:,Make strict rules for everyone,Ask classmates what they need help with,Use the position to get special treatment,Ignore the responsibility,Give the position to someone else,B,Leadership,1,Service Orientation
+FT010,Situational,Foundation,Your friend is upset about failing a test. You:,Tell them it's not important,Help them plan better study methods,Avoid them until they feel better,Make jokes to cheer them up,Share your own test results,B,Empathy,1,Emotional Support
+FT011,Situational,Foundation,You want to join the school debate team but are nervous about public speaking. You:,Give up on the idea,Force yourself to join despite fear,Practice speaking in front of mirror first,Ask friends to speak for you,Wait until next year,C,Growth,1,Self Development
+FV001,Values,Foundation,What matters most to you in choosing future studies?,High salary potential,Personal interest and passion,Family expectations,Easy subjects only,Popular career choices,B,Career,1,Intrinsic Motivation
+FV002,Values,Foundation,Your ideal future work environment would be:,Quiet and independent,Collaborative team setting,Mix of both depending on task,Competitive environment,Constantly changing,C,Work_Style,1,Work Preferences
+FV003,Values,Foundation,When choosing subjects to study you prioritize:,What your friends are taking,What seems easiest,What interests you most,What parents suggest,What has best job prospects,C,Learning,1,Academic Values
+FV004,Values,Foundation,Success in life means:,Making lots of money,Being happy and fulfilled,Being famous,Having power over others,Being better than everyone,B,Success,1,Life Values
+FV005,Values,Foundation,You prefer activities that:,Help other people,Let you be creative,Involve solving problems,Are physical and active,Make you money,C,Interests,1,Activity Preferences
+FV006,Values,Foundation,In group work you enjoy:,Leading the team,Supporting team members,Contributing ideas equally,Working on technical tasks,Presenting to others,C,Teamwork,1,Collaboration Style
+FV007,Values,Foundation,You feel most proud when you:,Get the highest marks in class,Help someone learn something,Finish a challenging project,Win a competition,Get praised by teachers,B,Achievement,1,Pride Sources
+FV008,Values,Foundation,Your ideal day would include:,Learning something new,Relaxing with friends,Solving interesting problems,Being physically active,Creating something,A,Growth,1,Daily Preferences
+FV009,Values,Foundation,When facing a difficult decision you:,Ask parents for advice,Think it through yourself,Discuss with friends,Research all options thoroughly,Go with your gut feeling,D,Decision,1,Decision Making Style
+FV010,Values,Foundation,You would rather be known as someone who is:,Very intelligent,Very kind and helpful,Very creative,Very hardworking,Very popular,B,Identity,1,Personal Identity
+FV011,Values,Foundation,In the future you want a career that:,Makes a positive difference,Provides financial security,Allows creative expression,Offers variety and change,Gives recognition and status,A,Career,1,Career Values

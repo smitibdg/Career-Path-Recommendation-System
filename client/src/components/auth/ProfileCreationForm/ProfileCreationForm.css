@@ -1,0 +1,381 @@
+/* Profile Form Styles */
+.profile-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding-top: 80px;
+}
+
+.profile-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.profile-form-content {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.profile-form-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.profile-form-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.profile-form-header p {
+  font-size: 1.1rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Form Styles */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Submit Button */
+.submit-profile-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  padding: 16px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.submit-profile-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+
+
+/* Dialog Styles */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); /* Darker overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px); /* Add backdrop blur */
+}
+
+.dialog-box {
+  background: white;
+  border-radius: 30px !important;
+  padding: 0;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  animation: dialogSlideIn 0.3s ease;
+  border: 2px solid #e5e7eb; /* Add subtle border */
+}
+
+@keyframes dialogSlideIn {
+  from {
+    transform: scale(0.9) translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.dialog-content {
+  padding: 3rem 2.5rem; /* More generous padding */
+  text-align: center;
+  background: white !important; /* Ensure white background */
+}
+
+.dialog-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%); /* Green gradient */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 2.5rem;
+  color: white;
+  box-shadow: 0 8px 25px rgba(52, 211, 153, 0.4);
+}
+
+.dialog-content h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827 !important; /* Force dark color */
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.dialog-content p {
+  color: #374151 !important; /* Force readable color */
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+}
+
+.dialog-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dialog-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.dialog-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white !important;
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+.dialog-btn:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.5);
+}
+
+/* Dark theme dialog only */
+[data-theme="dark"] .dialog-box {
+  background: #374151 !important;
+  border-color: #4b5563;
+}
+
+[data-theme="dark"] .dialog-content {
+  background: #374151 !important;
+}
+
+[data-theme="dark"] .dialog-content h3 {
+  color: #f9fafb !important;
+}
+
+[data-theme="dark"] .dialog-content p {
+  color: #d1d5db !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .profile-form-container {
+    padding: 1rem;
+  }
+
+  .profile-form-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .profile-form-header h1 {
+    font-size: 2rem;
+  }
+
+  .dialog-box {
+    margin: 1rem;
+  }
+}
+
+/* Dark theme */
+[data-theme="dark"] .profile-page {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+}
+
+[data-theme="dark"] .profile-form-content {
+  background: #374151;
+}
+
+[data-theme="dark"] .profile-form-header h1 {
+  color: white;
+}
+
+[data-theme="dark"] .profile-form-header p {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .form-group label {
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group select,
+[data-theme="dark"] .form-group textarea {
+  background: #4b5563;
+  color: white;
+  border-color: #6b7280;
+}
+
+[data-theme="dark"] .dialog-box {
+  background: #374151;
+}
+
+[data-theme="dark"] .dialog-content h3 {
+  color: white;
+}
+
+[data-theme="dark"] .dialog-content p {
+  color: #d1d5db;
+}
+
+/* SUBMIT BUTTON STYLING */
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 14px 32px !important;
+  border-radius: 12px !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+  width: auto !important;
+  min-width: 200px !important;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+.btn-primary:disabled {
+  opacity: 0.7 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+button[type="submit"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 14px 32px !important;
+  border-radius: 12px !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+  min-width: 200px !important;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+/*OVERRIDE BUTTON STYLING*/
+.form-navigation .btn,
+.form-navigation button,
+input[type="submit"],
+button[type="submit"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 14px 32px !important;
+  border-radius: 12px !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+  margin: 10px 5px !important;
+  min-width: 180px !important;
+}
+
+.form-navigation .btn:hover,
+.form-navigation button:hover,
+input[type="submit"]:hover,
+button[type="submit"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+}
+
+/*REDUCE SPACING*/
+.profile-form-container {
+  margin-top: 0 !important;
+  padding-top: 0rem !important;
+}
+
+.progress-indicator {
+  margin-bottom: 4rem !important; /* Reduced spacing */
+}

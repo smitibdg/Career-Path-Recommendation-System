@@ -1,0 +1,11 @@
+.dashboard-page {
+  min-height: 100vh;
+  padding-top: 0; /* No header padding */
+  margin: 0;
+  background-color: #f8fafc;
+}
+
+/* Dark theme */
+.theme-dark .dashboard-page {
+  background-color: #1f2937;
+}

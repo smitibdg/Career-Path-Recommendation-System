@@ -1,0 +1,228 @@
+.sidebar-container {
+  width: 70px;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.sidebar-container:hover {
+  width: 280px;
+}
+
+/* User Section */
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.user-avatar-small {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.user-details-expand {
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.sidebar-container:hover .user-details-expand {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.user-name {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.user-email {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Navigation */
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border: none;
+  background: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+  position: relative;
+}
+
+.sidebar-item:hover {
+  background-color: #f3f4f6;
+  transform: translateX(4px);
+}
+
+.sidebar-item.active {
+  background: linear-gradient(135deg, #ede9fe 0%, #f3f4f6 100%);
+  border-left: 3px solid #6366f1;
+}
+
+.sidebar-icon {
+  font-size: 1.5rem;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar-text {
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.sidebar-container:hover .sidebar-text {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sidebar-label {
+  font-weight: 500;
+  color: #1f2937;
+  font-size: 0.95rem;
+  margin-bottom: 0.125rem;
+}
+
+.sidebar-description {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Footer Actions */
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 0.5rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}
+
+.sidebar-action {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border: none;
+  background: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.sidebar-action:hover {
+  background-color: #f3f4f6;
+}
+
+.sidebar-action .sidebar-label {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.sidebar-container:hover .sidebar-action .sidebar-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Dark Theme */
+.theme-dark .sidebar-container {
+  background: #374151;
+  border-right-color: #4b5563;
+}
+
+.theme-dark .sidebar-item:hover {
+  background-color: #4b5563;
+}
+
+.theme-dark .sidebar-item.active {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+}
+
+.theme-dark .user-name,
+.theme-dark .sidebar-label {
+  color: #f9fafb;
+}
+
+.theme-dark .user-email,
+.theme-dark .sidebar-description {
+  color: #d1d5db;
+}
+
+.theme-dark .sidebar-footer {
+  border-top-color: #4b5563;
+}
+
+.theme-dark .sidebar-action:hover {
+  background-color: #4b5563;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .sidebar-container {
+    width: 60px;
+  }
+  
+  .sidebar-container:hover {
+    width: 60px;
+  }
+  
+  .user-details-expand,
+  .sidebar-text,
+  .sidebar-action .sidebar-label {
+    display: none !important;
+  }
+}

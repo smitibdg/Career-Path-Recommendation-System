@@ -1,0 +1,73 @@
+.main-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.dashboard-content {
+  flex: 1;
+  margin-left: 70px; /* ✅ Adjust for narrow sidebar */
+  padding: 2rem;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+/* When sidebar is hovered, adjust content margin */
+.sidebar-container:hover ~ .dashboard-content {
+  margin-left: 280px;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.dashboard-header p {
+  color: #6b7280;
+  font-size: 1.1rem;
+}
+
+.content-area {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  min-height: 600px;
+}
+
+/* Remove padding-top since no header */
+.dashboard-page {
+  padding-top: 0;
+}
+
+/* Dark Theme */
+.theme-dark .main-dashboard {
+  background-color: #1f2937;
+}
+
+.theme-dark .dashboard-header h1 {
+  color: #f9fafb;
+}
+
+.theme-dark .dashboard-header p {
+  color: #d1d5db;
+}
+
+.theme-dark .content-area {
+  background: #374151;
+  color: #f9fafb;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .dashboard-content {
+    margin-left: 60px;
+    padding: 1rem;
+  }
+}
