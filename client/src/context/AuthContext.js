@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   // API Configuration
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
 
   // Load user from localStorage on app start with validation
   useEffect(() => {
@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }) => {
         setTimeout(async () => {
           try {
             console.log('Checking for existing assessments after login...');
-            const assessmentResponse = await fetch('http://localhost:5000/api/ml/check-assessment-status', {
+            const assessmentResponse = await fetch(`${API_BASE_URL}/ml/check-assessment-status`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
