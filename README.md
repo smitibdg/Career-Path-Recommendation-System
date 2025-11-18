@@ -32,11 +32,10 @@ The system evaluates a student's profile and recommends specific career clusters
     * Technical & Soft Skills
     * Situational Judgment
     * Core Values
-* **🤖 AI Chatbot Assistant:** A built-in conversational AI (powered by Google Gemini) that answers career queries and guides users through the platform.
 * **📊 ML-Based Recommendations:** Uses decision trees and hybrid filtering to match user scores with 16+ career clusters and 200+ job roles.
-* **📈 Interactive Dashboard:** Visualizes test results and confidence scores for recommended roles.
-* **🏫 College & Resource Finder:** (In Progress) Helps students find colleges and courses matching their budget and location.
-
+* **📈 Interactive Dashboard:** After assessments, the dashboard displays model scores and provides career roadmaps, educational requirements, salary expectations, and integrated learning resources. Users can choose to **Retake Assessments** for better recommendations.
+* **🗺 Career Matches:** This section displays **four cards** representing the top predicted career roles. Each card includes an **Explore** button that links the user to an external online learning platform.
+* 
 ---
 
 ## 🏗 System Architecture
@@ -64,17 +63,13 @@ The system evaluates a student's profile and recommends specific career clusters
 
 | Component | Technology |
 | :--- | :--- |
-| **Frontend** | React.js, HTML5, CSS3, Context API |
-| **Backend** | Node.js, Express.js |
-| **Database** | MongoDB (Atlas Cloud) |
-| **AI / ML** | Python (Scikit-learn), API |
+| **Frontend** | **React.js**, HTML5, CSS3, Context API |
+| **Backend** | **Node.js, Express.js** |
+| **Database** | **MongoDB** (User profiles, test responses) |
+| **AI / ML** | Python (Scikit-learn), Decision Tree, Random Forest, KNN |
 | **Authentication** | JWT, Bcrypt.js |
 
 ---
-
-## ⚙️ Installation & Setup
-
-Follow these steps to run the project locally on your machine.
 
 ### Prerequisites
 * Node.js installed
