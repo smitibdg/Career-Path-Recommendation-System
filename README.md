@@ -67,9 +67,8 @@ The system evaluates a student's profile and recommends specific career clusters
 | **Frontend** | React.js, HTML5, CSS3, Context API |
 | **Backend** | Node.js, Express.js |
 | **Database** | MongoDB (Atlas Cloud) |
-| **AI / ML** | Python (Scikit-learn), Google Gemini API |
+| **AI / ML** | Python (Scikit-learn), API |
 | **Authentication** | JWT, Bcrypt.js |
-| **Deployment** | Vercel (Frontend), Render (Backend) |
 
 ---
 
@@ -86,3 +85,9 @@ Follow these steps to run the project locally on your machine.
 ```bash
 git clone [https://github.com/smitibdg/Career-Path-Recommendation-System.git](https://github.com/smitibdg/Career-Path-Recommendation-System.git)
 cd Career-Path-Recommendation-System
+
+### **👤 Author**
+Smiti Badugu
+Role: Full Stack Developer & Data Science Student
+Institution: S.I.E.S. College of Arts, Science & Commerce
+Made with ❤️ and ☕ for the final year project.
