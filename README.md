@@ -78,12 +78,12 @@ The system evaluates a student's profile and recommends specific career clusters
 * 
 ### 🚀 Future Roadmap
 > Turning this project into a Dynamic Web for all Students.
-[ ] Advanced College Filters: Filter by geolocation and specific cutoff marks.
-[ ] Downloadable Reports: Generate PDF reports of career analysis.
-[ ] Community Forum: Allow students to discuss career paths.
+* [ ] Advanced College Filters: Filter by geolocation and specific cutoff marks.
+* [ ] Downloadable Reports: Generate PDF reports of career analysis.
+* [ ] Community Forum: Allow students to discuss career paths.
 
 ### 👤 Author
 Smiti Badugu
-Role: Full Stack Developer & Data Science Student
-Institution: S.I.E.S. College of Arts, Science & Commerce
-Made with ❤️ and ☕ for the final year project.
+* Role: Full Stack Developer & Data Science Student
+* Institution: S.I.E.S. College of Arts, Science & Commerce
+* Made with ❤️ and ☕ for the final year project.
