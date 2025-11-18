@@ -75,12 +75,16 @@ The system evaluates a student's profile and recommends specific career clusters
 * Node.js installed
 * MongoDB installed locally or a MongoDB Atlas account
 * Git installed
-* 
+
+---
+
 ### 🚀 Future Roadmap
 > Turning this project into a Dynamic Web for all Students.
 * [ ] Advanced College Filters: Filter by geolocation and specific cutoff marks.
 * [ ] Downloadable Reports: Generate PDF reports of career analysis.
 * [ ] Community Forum: Allow students to discuss career paths.
+
+---
 
 ### 👤 Author
 Smiti Badugu
