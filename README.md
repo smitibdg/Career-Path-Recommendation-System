@@ -41,24 +41,22 @@ The system evaluates a student's profile and recommends specific career clusters
 
 ## 🏗 System Architecture
 
-![System Flowchart](E:\College\SEM_5\CPRS_AI_MAIN/flowchart.jpg)
-*(Add your Flowchart image here)*
+![System Flowchart](./screenshots/flowchart.jpg)
 
 ---
 
 ## 📸 Screenshots
 
 ### 1. Landing Page
-![Landing Page](./screenshots/banner.png)
+![Landing Page](./screenshots/LandingPg1.png)
+![Landing Page](./screenshots/LandingPg2.png)
+![Landing Page](./screenshots/LandingPg3.png)
+![Landing Page](./screenshots/LandingPg4.png)
 
 ### 2. Student Dashboard & Results
-![Dashboard](./screenshots/dashboard.png)
-
-### 3. Interactive Assessment UI
-![Assessment](./screenshots/assessment.png)
-
-### 4. AI Career Chatbot
-![Chatbot](./screenshots/chatbot.png)
+![Dashboard](./screenshots/DashboardPg1.png)
+![Dashboard](./screenshots/DashboardPg2.png)
+![Dashboard](./screenshots/DashboardPg3.png)
 
 ---
 
