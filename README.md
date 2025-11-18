@@ -81,11 +81,11 @@ Follow these steps to run the project locally on your machine.
 * MongoDB installed locally or a MongoDB Atlas account
 * Git installed
 * 
-### 1. Clone the Repository
-```bash
-git clone [https://github.com/smitibdg/Career-Path-Recommendation-System.git](https://github.com/smitibdg/Career-Path-Recommendation-System.git)
-cd Career-Path-Recommendation-System
-```
+### 🚀 Future Roadmap
+> Turning this project into a Dynamic Web for all Students.
+[ ] Advanced College Filters: Filter by geolocation and specific cutoff marks.
+[ ] Downloadable Reports: Generate PDF reports of career analysis.
+[ ] Community Forum: Allow students to discuss career paths.
 
 ### 👤 Author
 Smiti Badugu
