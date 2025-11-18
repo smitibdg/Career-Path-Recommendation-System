@@ -80,13 +80,14 @@ Follow these steps to run the project locally on your machine.
 * Node.js installed
 * MongoDB installed locally or a MongoDB Atlas account
 * Git installed
-
+* 
 ### 1. Clone the Repository
 ```bash
 git clone [https://github.com/smitibdg/Career-Path-Recommendation-System.git](https://github.com/smitibdg/Career-Path-Recommendation-System.git)
 cd Career-Path-Recommendation-System
+```
 
-### **👤 Author**
+### 👤 Author
 Smiti Badugu
 Role: Full Stack Developer & Data Science Student
 Institution: S.I.E.S. College of Arts, Science & Commerce
